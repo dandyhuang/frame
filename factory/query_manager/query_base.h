@@ -25,7 +25,7 @@ class QueryBase {
  public:
   QueryBase() = default;
   virtual ~QueryBase() = default;
-  virtual int init(std::string strategy_name) {}
+  virtual int init(std::string strategy_name) { return 0; }
   int QueryData();
 };
 }  // namespace dandyhuang

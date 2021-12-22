@@ -9,6 +9,9 @@
 namespace dandyhuang {
 
 REGISTER_QUERY(QueryBase)
-int QueryBase::QueryData() { std::cout << "do something" << std::endl; }
+int QueryBase::QueryData() {
+  std::cout << "do something" << std::endl;
+  return 0;
+}
 
 }  // end namespace dandyhuang

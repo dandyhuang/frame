@@ -15,10 +15,10 @@ INCLUDE= -I./ -Ifactory/ \
 	-Iscope_guard
 
 $(FACTORY): $(call FIND, factory factory/query_manager,o)
-	$(CXX) $(filter %.o, $^) $(CFLAGS) $(INCLUDE) -o $@
+	$(CXX) $(filter %.o, $^) $(FACTORY).o $(CFLAGS) $(INCLUDE) -o $@
 
 $(SCOPE): $(call FIND, scope_guard,o)
-	$(CXX) $(filter %.o, $^) $(CFLAGS) $(INCLUDE) -o $@
+	$(CXX) $(filter %.o, $^)  $(SCOPE).o $(CFLAGS) $(INCLUDE) -o $@
 
 
 %.o: %.cc
@@ -36,7 +36,7 @@ $(BUILD)/%.d: %.cc
 	@mkdir -p $(dir $@)
 	@$(CXX) -MM $(INCLUDE) $(CFLAGS) $< | \
     sed 's#\($(notdir $*)\)\.o[ :]*#$(BUILD)/$*.o $@: #g' > $@
-all: $(FACTORY)
+all: $(FACTORY) $(SCOPE)
 
 clean:
 	rm -f *.o  $(FACTORY) $(SCOPE)
