@@ -1,4 +1,4 @@
-#include "factory/query_manager/query_base_imp.h"
+#include "factory/query_manager/query_base.h"
 #include "factory/query_manager/query_factory.h"
 
 int main() {
