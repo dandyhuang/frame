@@ -15,6 +15,18 @@ $(BIN): $(call FIND, factory factory/query_manager,o)
 %.o: %.cc
 	${CXX} -c ${CFLAGS} $(INCLUDE) $(CPPINCS) $< -o $@
 
+# build object 
+$(BUILD)/%.o: %.cc
+	@mkdir -p $(dir $@)
+	$(CXX) $(CFLAGS) -pthread \
+    -c $< \
+    -o $@
+
+# calc dependency
+$(BUILD)/%.d: %.cc 
+	@mkdir -p $(dir $@)
+	@$(CXX) -MM $(CFLAGS) $< | \
+    sed 's#\($(notdir $*)\)\.o[ :]*#$(BUILD)/$*.o $@: #g' > $@
 all: $(BIN)
 
 clean:
