@@ -6,14 +6,20 @@ CFLAGS := $(CPPFLAGS)
 BUILD = build
 OBJ = local_cache_test.o
 LIBS = -lpthread
-BIN=test_factory
+FACTORY=test_factory
+SCOPE=test_scope_guard
 FIND = $(patsubst %.cc, $(BUILD)/%.$(2), $(shell find $(1) -name "*.cc" -type f))
 
-INCLUDE=-Ifactory/ \
-	-Ifactory/query_manager
+INCLUDE= -I./ -Ifactory/ \
+	-Ifactory/query_manager \
+	-Iscope_guard
 
-$(BIN): $(call FIND, factory factory/query_manager,o)
+$(FACTORY): $(call FIND, factory factory/query_manager,o)
 	$(CXX) $(filter %.o, $^) $(CFLAGS) $(INCLUDE) -o $@
+
+$(SCOPE): $(call FIND, scope_guard,o)
+	$(CXX) $(filter %.o, $^) $(CFLAGS) $(INCLUDE) -o $@
+
 
 %.o: %.cc
 	${CXX} -c ${CFLAGS} $(INCLUDE) $(CPPINCS) $< -o $@
@@ -30,7 +36,7 @@ $(BUILD)/%.d: %.cc
 	@mkdir -p $(dir $@)
 	@$(CXX) -MM $(INCLUDE) $(CFLAGS) $< | \
     sed 's#\($(notdir $*)\)\.o[ :]*#$(BUILD)/$*.o $@: #g' > $@
-all: $(BIN)
+all: $(FACTORY)
 
 clean:
-	rm -f *.o  $(BIN) 
+	rm -f *.o  $(FACTORY) $(SCOPE)
