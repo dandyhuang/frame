@@ -1,9 +1,6 @@
 .PHONY:clean
 
 
-.PHONY : all
-all: $(FACTORY) $(SCOPE) $(DAG)
-
 CXX= g++
 CPPFLAGS= -g --std=c++11 -Wall -O2 -fPIC
 CFLAGS := $(CPPFLAGS)
@@ -14,6 +11,9 @@ DAG=test_dag
 FIND = $(patsubst %.cc, $(BUILD)/%.$(2), $(shell find $(1) -name "*.cc" -type f))
 FIND_CPP = $(patsubst %.cpp, $(BUILD)/%.$(2), $(shell find $(1) -name "*.cpp" -type f))
 
+
+all: $(FACTORY) $(SCOPE) $(DAG)
+.PHONY : all
 
 THIRD_PARTY=./thirdparty/
 BRPC_INC=-I$(THIRD_PARTY)/brpc/include
