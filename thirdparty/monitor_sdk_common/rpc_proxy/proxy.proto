@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option cc_generic_services=false;
 
-package vivo.commonproxy;
+package dandy.commonproxy;
 
 message CommonInfo {
   string protofile_path = 1;  // 这里可以改为指定多个查找目录，当前一个目录符合需求

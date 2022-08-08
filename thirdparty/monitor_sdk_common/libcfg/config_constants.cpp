@@ -73,7 +73,7 @@ std::string ConfigConstants::CONFIG_HTTP_TIMEOUT = "config.http.timeout";
 std::string ConfigConstants::CONFIG_HTTP_LONG_POLLING_ENABLED = "config.http.long.polling.enabled";
 
 // vivo-commons spi是否开启加载
-std::string ConfigConstants::CONFIG_VIVO_COMMONS_SPI_ENABLED = "config.vivo.commons.spi.enabled";
+std::string ConfigConstants::CONFIG_VIVO_COMMONS_SPI_ENABLED = "config.dandy.commons.spi.enabled";
 
 // 默认应用名
 std::string ConfigConstants::DEFAULT_APP_NAME = "";

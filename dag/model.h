@@ -1,4 +1,4 @@
-// Authors: weitao.zhang@vivo.com
+// Authors: weitao.zhang@dandy.com
 
 #ifndef REC_MODEL_H_
 #define REC_MODEL_H_

@@ -1,4 +1,4 @@
-// Authors: weitao.zhang@vivo.com
+// Authors: sg@dandy.com
 
 #ifndef REC_UTIL_H_
 #define REC_UTIL_H_

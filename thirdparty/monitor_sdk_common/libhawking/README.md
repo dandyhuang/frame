@@ -16,7 +16,7 @@ GrayTestQueryClient(std::string business_code,
 | 参数名称  | 是否必填 | 含义 | 备注 |
 |---|---|---|---|
 | business_code | 是 | 业务编码，由实验平台分配 | com.vivo.browser |
-| domain | 是 | 实验平台实验查询接口的地址前缀，<br>可区分测试环境、预上线环境、线上环境 | 测试环境地址： http://10.101.103.80:8080<br>预上线环境地址： http://gray-pre.vivo.com.cn<br>线上环境地址： http://gray.vivo.com.cn |
+| domain | 是 | 实验平台实验查询接口的地址前缀，<br>可区分测试环境、预上线环境、线上环境 | 测试环境地址： http://10.101.103.80:8080<br>预上线环境地址： http://gray-pre.dandy.com.cn<br>线上环境地址： http://gray.dandy.com.cn |
 | env | 是 | 业务进程所在的环境，开发环境和测试环境下，<br>程序初始化失败不会断开，但是预上线环境和<br>线上环境初始化失败会断开程序 | 开发环境：dev<br>测试环境：test<br>预上线环境：pre<br>线上环境：prd|
 | init | 否 | 是否初始化SDK | 仅供测试用，正式使用一定需要初始化 |
 | logger | 否 | 日志配置类，不填的话使用默认日志配置 |

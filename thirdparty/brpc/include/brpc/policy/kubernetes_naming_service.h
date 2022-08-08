@@ -1,4 +1,4 @@
-// Authors: weitao.zhang@vivo.com
+// Authors: weitao.zhang@dandy.com
 
 #ifndef  BRPC_POLICY_KUBERNETES_NAMING_SERVICE
 #define  BRPC_POLICY_KUBERNETES_NAMING_SERVICE

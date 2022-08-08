@@ -1,4 +1,4 @@
-// Authors: weitao.zhang@vivo.com
+// Authors: sg@dandy.com
 
 #include "dag/util.h"
 #include <time.h>

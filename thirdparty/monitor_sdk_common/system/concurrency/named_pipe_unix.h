@@ -1,5 +1,5 @@
 //********************************************************************
-//  Copyright (c) 2013 Vivo.com, Inc. All Rights Reserved
+//  Copyright (c) 2013 dandy.com, Inc. All Rights Reserved
 //
 //  @date:      2013-08-29 18:55
 //  @file:      named_pipe_unix.h

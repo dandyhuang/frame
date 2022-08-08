@@ -2,9 +2,9 @@
 
 namespace dag {
 
-std::shared_ptr<NodeFactory_map> NodeFactory_map::instance()
-{
-    static std::shared_ptr<NodeFactory_map> handle = std::shared_ptr<NodeFactory_map>(new NodeFactory_map());
-    return handle;
+std::shared_ptr<NodeFactoryMap> NodeFactoryMap::instance() {
+  static std::shared_ptr<NodeFactoryMap> handle =
+      std::shared_ptr<NodeFactoryMap>(new NodeFactoryMap());
+  return handle;
 }
-} // end of namespace
+}  // namespace dag

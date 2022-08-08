@@ -1,4 +1,4 @@
-// Authors: weitao.zhang@vivo.com
+// Authors: weitao.zhang@dandy.com
 
 #ifndef BRPC_POLICY_VIVO_RTRS_COMM_PROTOCAL_
 #define BRPC_POLICY_VIVO_RTRS_COMM_PROTOCAL_
