@@ -5,9 +5,9 @@
 namespace dag {
 class Node;
 class GraphContext {
-    public:
-    std::unordered_map<Node*, std::shared_ptr<std::atomic<int>>> node_input_num_map;
-    virtual int init() = 0;
-    virtual void clear() = 0;
+ public:
+  std::unordered_map<Node*, std::shared_ptr<std::atomic<int>>> node_input_num_map;
+  virtual int init() = 0;
+  virtual void clear() = 0;
 };
-} // end of namespace
+}  // namespace dag

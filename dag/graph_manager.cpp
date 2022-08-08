@@ -1,122 +1,123 @@
 #include "dag/graph_manager.h"
-#include "dag/node_manager.h"
-#include "dag/graph.h"
+
 #include <boost/algorithm/string.hpp>
+
 #include "dag/graph.h"
+#include "dag/node_manager.h"
 namespace dag {
 namespace common {
-using dag::Node;
 using dag::Graph;
+using dag::Node;
 void GraphManager::add_graph_conf(const std::string& file_path) {
-    dag::ConfigXml xml_conf;
-    xml_conf.init(file_path);
-    dag::ConfigXml topo_config;
-    if (!xml_conf.Find("topo", topo_config)) {
-        VLOG_APP(ERROR) << "topo not found in " << file_path;
-        return;
+  dag::ConfigXml xml_conf;
+  xml_conf.init(file_path);
+  dag::ConfigXml topo_config;
+  if (!xml_conf.Find("topo", topo_config)) {
+    VLOG_APP(ERROR) << "topo not found in " << file_path;
+    return;
+  }
+  bool has_next = false;
+
+  std::string topo_name;
+  topo_config.Attr<std::string>("name", topo_name);
+
+  std::shared_ptr<dag::ConfigXml> node_conf_ptr = std::make_shared<dag::ConfigXml>();
+  auto& node_conf = *node_conf_ptr;
+  if (!topo_config.Child("graph_node", node_conf)) {
+    VLOG_APP(ERROR) << "graph_node not exist in file: " << file_path;
+    return;
+  }
+  std::shared_ptr<dag::Graph> graph = std::make_shared<dag::Graph>();
+  dag::Node* root = nullptr;
+  std::unordered_map<std::string, Node*> nodes_map;
+  auto create_service_if_not_exist = [&nodes_map](const std::string name) -> dag::Node* {
+    // 会有很多重复的node
+    auto it = nodes_map.find(name);
+    if (it != nodes_map.end()) {
+      return it->second;
     }
-    bool has_next = false;
-
-    std::string topo_name;
-    topo_config.Attr<std::string>("name", topo_name);
-
-    std::shared_ptr<dag::ConfigXml> node_conf_ptr = std::make_shared<dag::ConfigXml>();
-    auto& node_conf = *node_conf_ptr;
-    if (!topo_config.Child("graph_node", node_conf)) {
-        VLOG_APP(ERROR) << "graph_node not exist in file: " << file_path;
-        return;
+    auto node_config = NodeManager::instance().get_node_info(name);
+    if (!node_config) {
+      VLOG_APP(ERROR) << "node name: " << name << " not found in node manager";
+      std::cout << "node name: " << name << " not found in node manager" << std::endl;
+      return nullptr;
     }
-    std::shared_ptr<dag::Graph> graph = std::make_shared<dag::Graph>();
-    dag::Node* root = nullptr;
-    std::unordered_map<std::string, Node*> nodes_map;
-    auto create_service_if_not_exist = [&nodes_map](const std::string name) -> dag::Node* {
-        // 会有很多重复的node
-        auto it = nodes_map.find(name);
-        if (it != nodes_map.end()) {
-            return it->second;
-        }
-        auto node_config = NodeManager::instance().get_node_info(name);
-        if (!node_config) {
-            VLOG_APP(ERROR) << "node name: " << name << " not found in node manager";
-            std::cout << "node name: " << name << " not found in node manager"<<std::endl;
-            return nullptr;
-        }
 
-        std::string clazz;
-        node_config->Attr<std::string>("class", clazz);
-        auto service_fac = GET_SERVICE_FACTORY(clazz);
-        if (!service_fac) {
-            VLOG_APP(ERROR) << "unregistered class: " << clazz;
-            std::cout << "unregistered class: " << clazz<<std::endl;
-            return nullptr;
-        }
-        auto service_node = service_fac->create();
-        service_node->init(node_config);
-        service_node->set_name(name);
-        nodes_map[name] = service_node;
-        return service_node;
-    };
-    do {
-        std::string name;
-        node_conf.Attr<std::string>("name", name);
-        Node* service = create_service_if_not_exist(name);
-        if (!service) {
-            VLOG_APP(ERROR) << "graph node name: " << name << " create failed";
-            std::cout << "graph node name: " << name << " create failed" << std::endl;
-            has_next = node_conf.Next("graph_node", node_conf);
+    std::string clazz;
+    node_config->Attr<std::string>("class", clazz);
+    auto service_fac = GET_SERVICE_FACTORY(clazz);
+    if (!service_fac) {
+      VLOG_APP(ERROR) << "unregistered class: " << clazz;
+      std::cout << "unregistered class: " << clazz << std::endl;
+      return nullptr;
+    }
+    auto service_node = service_fac->create();
+    service_node->init(node_config);
+    service_node->set_name(name);
+    nodes_map[name] = service_node;
+    return service_node;
+  };
+  do {
+    std::string name;
+    node_conf.Attr<std::string>("name", name);
+    Node* service = create_service_if_not_exist(name);
+    if (!service) {
+      VLOG_APP(ERROR) << "graph node name: " << name << " create failed";
+      std::cout << "graph node name: " << name << " create failed" << std::endl;
+      has_next = node_conf.Next("graph_node", node_conf);
+      continue;
+    }
+    if (root == nullptr) {
+      // first node is root by default
+      root = service;
+    }
+    {
+      std::string children = "";
+      node_conf.Attr<std::string>("children", children);
+      if (!children.empty()) {
+        boost::trim(children);
+        std::vector<std::string> child_vec;
+        boost::split(child_vec, children, boost::is_any_of(","));
+        for (std::string& c : child_vec) {
+          boost::trim(c);
+          dag::Node* child = create_service_if_not_exist(c);
+          if (!child) {
             continue;
+          }
+          service->add_output(child);
         }
-        if (root == nullptr) {
-            // first node is root by default
-            root = service;
+      }
+    }
+    {
+      std::string parent = "";
+      node_conf.Attr<std::string>("parent", parent);
+      if (!parent.empty()) {
+        boost::trim(parent);
+        std::vector<std::string> p_vec;
+        boost::split(p_vec, parent, boost::is_any_of(","));
+        for (std::string& p : p_vec) {
+          boost::trim(p);
+          dag::Node* p_node = create_service_if_not_exist(p);
+          if (!p_node) {
+            continue;
+          }
+          p_node->add_output(service);
         }
-        {
-            std::string children = "";
-            node_conf.Attr<std::string>("children", children);
-            if (!children.empty()) {
-                boost::trim(children);
-                std::vector<std::string> child_vec;
-                boost::split(child_vec, children, boost::is_any_of(","));
-                for (std::string& c : child_vec) {
-                    boost::trim(c);
-                    dag::Node* child = create_service_if_not_exist(c);
-                    if (!child) {
-                        continue;
-                    }
-                    service->add_output(child);
-                }
-            }
-        }
-        {
-            std::string parent = "";
-            node_conf.Attr<std::string>("parent", parent);
-            if (!parent.empty()) {
-                 boost::trim(parent);
-                 std::vector<std::string> p_vec;
-                 boost::split(p_vec, parent, boost::is_any_of(","));
-                 for (std::string& p : p_vec) {
-                     boost::trim(p);
-                     dag::Node* p_node = create_service_if_not_exist(p);
-                     if(!p_node) {
-                         continue;
-                     }
-                     p_node->add_output(service);
-                 }
-            }
-        }
-        has_next = node_conf.Next("graph_node", node_conf);
-    } while(has_next);
-    graph->init(root, topo_name);
-    graph_map.insert({topo_name, graph});
+      }
+    }
+    has_next = node_conf.Next("graph_node", node_conf);
+  } while (has_next);
+  graph->init(root, topo_name);
+  graph_map.insert({topo_name, graph});
 }
 
 std::shared_ptr<Graph> GraphManager::get_graph(const std::string& topo_name) {
-    auto it = graph_map.find(topo_name);
-    if (it == graph_map.end()) {
-        return std::shared_ptr<Graph>();
-    } else {
-        return it->second;
-    }
+  auto it = graph_map.find(topo_name);
+  if (it == graph_map.end()) {
+    return std::shared_ptr<Graph>();
+  } else {
+    return it->second;
+  }
 }
-} // end of namespace
-} // end of namespace
+}  // namespace common
+}  // namespace dag
