@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option cc_generic_services=false;
+
+package com.vivo.test;
+
+import "query.proto";
+
+message AnswerInfo {
+  Inner inner = 1;
+  string answer = 2;
+  bytes debug = 3;
+}
+
+service SupportService {
+  rpc query(QueryInfo) returns (AnswerInfo);
+}

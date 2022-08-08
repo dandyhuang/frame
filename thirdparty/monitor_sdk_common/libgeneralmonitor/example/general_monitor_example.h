@@ -1,0 +1,10 @@
+//
+// Created by 杨民善 on 2020/6/22.
+//
+
+#ifndef BLADE_BASE_COMMON_GENERAL_MONITOR_EXAMPLE_H
+#define BLADE_BASE_COMMON_GENERAL_MONITOR_EXAMPLE_H
+
+#include "../general_monitor_report.h"
+
+#endif //BLADE_BASE_COMMON_GENERAL_MONITOR_EXAMPLE_H

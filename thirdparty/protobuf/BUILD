@@ -1,0 +1,10 @@
+cc_library(
+    name='protobuf',
+    prebuilt=True,
+    export_incs=['./include',]
+)
+cc_library(
+    name='protoc',
+    prebuilt=True,
+    export_incs=['./include',]
+)

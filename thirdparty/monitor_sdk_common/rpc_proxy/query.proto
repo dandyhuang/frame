@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option cc_generic_services=false;
+
+package com.vivo.test;
+
+message Inner {
+  int32 version = 1;
+}
+
+message QueryInfo {
+  Inner inner = 1;
+  string query = 2;
+}

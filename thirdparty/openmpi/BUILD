@@ -1,0 +1,15 @@
+cc_library(
+    name='mpi',
+    prebuilt=True,
+    export_incs=['./include',]
+)
+cc_library(
+    name='open-pal',
+    prebuilt=True,
+    export_incs=['./include',]
+)
+cc_library(
+    name='open-rte',
+    prebuilt=True,
+    export_incs=['./include',]
+)

@@ -1,0 +1,42 @@
+# 说明
+
+    这是一个动态加载PB文件，访问指定服务的代理
+    包含两个库，一个测试用例，一个批量获取数据的工具，一个代码RPC服务
+
+## 动态加载proto文件的库
+
+### 如何使用
+
+    这个工具证明了动态加载protobuf文件的可能性
+    pb_loader可以将json转换成pb的二进制格式，也可以将pb二进制转化成json格式 为自动化测试提供了可能性
+
+### 测试用例使用说明
+
+    ~/vv/build64_release/common/rpc_proxy/test_pb_loader support.proto '{"inner":{"version":1},"query":"vivo"}' com.vivo.test.QueryInfo
+
+## 代理访问
+
+### 代理访问工具
+
+    代理访问的库，为通用的动态代理RPC接口提供了可能性
+    根据指定配置和请求体，请求指定的RPC，返回值转化为JSON，存入指定的文件
+
+### 配置文件说明
+
+    {
+      "locator_host": "",  // 注册中心域名或地址(测试：10.101.30.75 预发：10.102.161.188 线上：registry.tars.vivo.lan)
+      "locator_port": "17890",  // 注册中心端口，注意这里是字段串
+      "servant_obj":"",  // 注册的服务名(询问服务开发者)
+      "ipport":"",  // 如果指定ipport，则访问指定主机，否则完全与客户端访问规则相同
+      "base_path":["."],  // 查找proto文件的地址
+      "instance_proto":"",  // 入口proto文件
+      "req_msg":"",  // 请求msg，包含完整的namespace(package),如：a.b.msg
+      "resp_msg":"",  // 返回msg
+      "rpc_name":"",  // proto文件中定义的方法名
+      "req_data_file":"",  //  请求时传入的req_msg内容，在文件中以json的格式存放，每行一个
+      "out_file":""  // 返回结果存储文件
+    }
+
+## 代理rpc服务
+
+    这是一个RPC代理服务，即是，将代理访问的库服务化
