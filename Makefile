@@ -21,6 +21,7 @@ $(SCOPE): $(call FIND, scope_guard,o)
 	$(CXX) $(filter %.o, $^)  $(SCOPE).o $(CFLAGS) $(INCLUDE) -o $@
 
 
+
 %.o: %.cc
 	${CXX} -c ${CFLAGS} $(INCLUDE) $(CPPINCS) $< -o $@
 
