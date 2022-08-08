@@ -1,7 +1,8 @@
 .PHONY:clean
 
-all: $(FACTORY) $(SCOPE) $(DAG)
+
 .PHONY : all
+all: $(FACTORY) $(SCOPE) $(DAG)
 
 CXX= g++
 CPPFLAGS= -g --std=c++11 -Wall -O2 -fPIC
