@@ -1,86 +1,91 @@
 #include "dag/graph.h"
 
 namespace dag {
-static void* b_func(void * args_tmp) {
-    Bargs* args = (Bargs*)args_tmp;
-    // std::cout << " bthread run output node: " << args->node->get_name().c_str() << std::endl;
-    args->node->run(args->context);
-    delete args;
-    return nullptr;
+static void* b_func(void* args_tmp) {
+  Bargs* args = (Bargs*)args_tmp;
+  // std::cout << " bthread run output node: " << args->node->get_name().c_str() << std::endl;
+  args->node->run(args->context);
+  delete args;
+  return nullptr;
 }
-void Node::init(std::shared_ptr<dag::ConfigXml> config) {
-}
-void Node::run(std::shared_ptr<dag::Context> context) {
-    if (!skip(context)) {
-        auto node_timecost_monitor = context->monitor_ctx->mutable_node_timecost_monitor();
-        // VLOG_APP(ERROR) << "node:[" << name << "] do_service start; " << " type: " << type() << " input_num:  " << input_num << " out_nodes size:" << out_nodes.size();
-        int64_t start = butil::gettimeofday_us();
-        if (node_timecost_monitor->find(get_name()) != node_timecost_monitor->end()){
-            node_timecost_monitor->operator[](get_name())->start_time = start;
-        }
-        do_service(context);
-        recorder->operator<<(butil::gettimeofday_us() - start);
-        // io nodes call run_output_nodes_if_ready themselves
-        if (type() == std::string("cpu")) {
-            if (node_timecost_monitor->find(get_name()) != node_timecost_monitor->end()){
-                node_timecost_monitor->operator[](get_name())->cost =
-                    butil::gettimeofday_us() - start;
-            }
-            run_output_nodes_if_ready(context);
-        }
-    } else {
-        // VLOG_APP(ERROR) << "skip " << name;
-        run_output_nodes_if_ready(context);
+void Node::init(std::shared_ptr<dag::ConfigXml> config) {}
+void Node::run(std::shared_ptr<dag::GraphContext> context) {
+  if (!skip(context)) {
+    auto node_timecost_monitor = context->monitor_ctx->mutable_node_timecost_monitor();
+    // VLOG_APP(ERROR) << "node:[" << name << "] do_service start; " << " type: " << type() << "
+    // input_num:  " << input_num << " out_nodes size:" << out_nodes.size();
+    int64_t start = butil::gettimeofday_us();
+    if (node_timecost_monitor->find(get_name()) != node_timecost_monitor->end()) {
+      node_timecost_monitor->operator[](get_name())->start_time = start;
     }
+    do_service(context);
+    recorder->operator<<(butil::gettimeofday_us() - start);
+    // io nodes call run_output_nodes_if_ready themselves
+    if (type() == std::string("cpu")) {
+      if (node_timecost_monitor->find(get_name()) != node_timecost_monitor->end()) {
+        node_timecost_monitor->operator[](get_name())->cost = butil::gettimeofday_us() - start;
+      }
+      run_output_nodes_if_ready(context);
+    }
+  } else {
+    // VLOG_APP(ERROR) << "skip " << name;
+    run_output_nodes_if_ready(context);
+  }
 }
-int Node::do_service(std::shared_ptr<dag::Context> context) noexcept {
-    // VLOG_APP(ERROR) << name << " do service; input_num:  " << input_num << " out_nodes size:" << out_nodes.size() ;
-    return 0;
+int Node::do_service(std::shared_ptr<dag::GraphContext> context) noexcept {
+  // VLOG_APP(ERROR) << name << " do service; input_num:  " << input_num << " out_nodes size:" <<
+  // out_nodes.size() ;
+  return 0;
 }
-bool Node::skip(std::shared_ptr<dag::Context> context) {
+bool Node::skip(std::shared_ptr<dag::GraphContext> context) { return false; }
+bool Node::notify(std::shared_ptr<dag::GraphContext> context) {
+  auto it = context->node_input_num_map.find(this);
+  if (it == context->node_input_num_map.end()) {
+    VLOG_APP(ERROR) << "node:" << this
+                    << " not found in node_input_num_map, this should not happen";
     return false;
+  }
+  auto input_num = it->second;
+  int old_value = input_num->fetch_sub(1);
+  // VLOG_APP(ERROR) << name << " notified; " << " old_value: " << old_value;
+  if (old_value == 1) {
+    return true;
+  } else if (old_value <= 0) {
+    VLOG_APP(ERROR) << "too many notify, old_value: " << old_value << ", this should not happen";
+  }
+  return false;
 }
-bool Node::notify(std::shared_ptr<dag::Context> context) {
-    auto it = context->node_input_num_map.find(this);
-    if (it == context->node_input_num_map.end()) {
-        VLOG_APP(ERROR) << "node:" << this << " not found in node_input_num_map, this should not happen";
-        return false;
+void Node::run_output_nodes_if_ready(std::shared_ptr<dag::GraphContext> context) {
+  int ready_nodes_num = 0;
+  Node* last_ready_node = nullptr;
+  std::vector<bthread_t> bt_vec;
+  bt_vec.reserve(out_nodes.size());
+  for (size_t i = 0; i < out_nodes.size(); i++) {
+    auto output_node = out_nodes[i];
+    // VLOG_APP(ERROR) << name << " notify " << output_node->get_name();
+    auto ready = output_node->notify(context);
+    if (ready) {
+      // VLOG_APP(ERROR) << output_node->get_name() << " is ready";
+      ++ready_nodes_num;
+      if (last_ready_node != nullptr) {
+#ifdef DAG_THREAD_USE
+        bthread_t tid;
+        Bargs* args = new Bargs(last_ready_node, context);
+        bthread_start_background(&tid, &BTHREAD_ATTR_SMALL, b_func, args);
+        bt_vec.push_back(tid);
+#else
+        bthread_t tid;
+        Bargs* args = new Bargs(last_ready_node, context);
+        bthread_start_background(&tid, &BTHREAD_ATTR_SMALL, b_func, args);
+        bt_vec.push_back(tid);
+#endif
+      }
+      last_ready_node = output_node;
     }
-    auto input_num = it->second;
-    int old_value = input_num->fetch_sub(1);
-    // VLOG_APP(ERROR) << name << " notified; " << " old_value: " << old_value;
-    if (old_value == 1) {
-        return true;
-    } else if (old_value <= 0) {
-        VLOG_APP(ERROR) << "too many notify, old_value: " << old_value << ", this should not happen";
-    } 
-    return false;
+  }
+  if (last_ready_node != nullptr) {
+    last_ready_node->run(context);
+  }
+  return;
 }
-void Node::run_output_nodes_if_ready(std::shared_ptr<dag::Context> context) {
-    int ready_nodes_num = 0;
-    Node* last_ready_node = nullptr;
-    std::vector<bthread_t> bt_vec;
-    bt_vec.reserve(out_nodes.size());
-    for (size_t i = 0; i < out_nodes.size(); i++) {
-        auto output_node = out_nodes[i];
-        // VLOG_APP(ERROR) << name << " notify " << output_node->get_name();
-        auto ready = output_node->notify(context);
-        if (ready) {
-            // VLOG_APP(ERROR) << output_node->get_name() << " is ready";
-            ++ready_nodes_num;
-            if (last_ready_node != nullptr) {
-                bthread_t tid;
-                Bargs* args = new Bargs(last_ready_node, context);
-                bthread_start_background(&tid, &BTHREAD_ATTR_SMALL, b_func, args);
-                bt_vec.push_back(tid);
-            }
-            last_ready_node = output_node;
-
-        }
-    }
-    if (last_ready_node != nullptr) {
-        last_ready_node->run(context);
-    }
-    return;
-}
-}
+}  // namespace dag
