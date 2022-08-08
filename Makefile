@@ -23,6 +23,7 @@ INCLUDE= -I./ -Ifactory/ \
 LIBS = -lpthread $(BRPC_LIB)
 
 f_source = $(call FIND, factory factory/query_manager,o) $(FACTORY).o
+$(warning  "f_socure:$(f_source)"")
 $(FACTORY): $(f_source)
 	$(CXX) $(filter %.o, $^)  $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
