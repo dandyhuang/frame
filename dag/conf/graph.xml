@@ -1,10 +1,12 @@
-<main name="default">
-    <graph_node name="input" children = "extract" />
-    <graph_node name="extract" children = "embedding_local" />
-    <graph_node name="embedding_local" children = "concat" />
-    <graph_node name="concat" children = "model" />
-    <graph_node name="model" children = "response" />
-    <graph_node name="response" children = "dump_log" />
-    <graph_node name="dump_log" children = "kafka_log" />
-    <graph_node name="kafka_log" />
+<main name="graph">
+    <graph name="default" pro="feed">
+        <node name="input" children = "extract" />
+        <node name="extract" children = "embedding_local" />
+        <node name="embedding_local" children = "concat" />
+        <node name="concat" children = "model" />
+        <node name="model" children = "response" />
+        <node name="response" children = "dump_log" />
+        <node name="dump_log" children = "kafka_log" />
+        <node name="kafka_log" />
+    </graph>
 </main>

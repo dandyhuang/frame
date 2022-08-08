@@ -13,7 +13,7 @@ class GraphManager {
   GraphManager() {}
 
  public:
-  static GraphManager& instance() {
+  static GraphManager& Instance() {
     static GraphManager inst;
     return inst;
   }
@@ -23,7 +23,7 @@ class GraphManager {
 
  private:
   dag::Node* create_service(const std::string name);
-  void CreateGraph();
+  std::shared_ptr<dag::Graph> CreateGraph(std::shared_ptr<dag::Graph> graph);
   std::unordered_map<std::string, std::shared_ptr<dag::Graph>> graph_map_;
 };
 }  // namespace common

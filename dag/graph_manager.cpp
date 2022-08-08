@@ -20,10 +20,31 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
 
   std::string main_name;
   main_config.Attr<std::string>("name", main_name);
+  dag::ConfigXml graph;
+  if (!main_config.Child("graph", graph)) {
+    main_config << file_path << "graph node not exist in file";
+    return;
+  }
+  do {
+    std::string name;
+    graph.Attr<std::string>("name", name);
+    auto graph_ptr = CreateGraph(graph);
+    if (graph_ptr == nullptr) {
+      VLOG_APP(ERROR) << "[" << name << "] ERROR_FRAME_GRAPH_CONF_PARSE_FAIL";
+      return;
+    }
 
-  std::shared_ptr<dag::ConfigXml> node_conf_ptr = std::make_shared<dag::ConfigXml>();
+    graph_map_.insert({name, graph});
+    has_next = graph.Next("graph", graph);
+  } while (has_next);
+}
+
+std::shared_ptr<dag::Graph> CreateGraph(const dag::ConfigXml& graph_conf) {
+  std::string graph_name;
+  graph_conf.Attr<std::string>("name", graph_name);
+  std::shared_ptr<vv_feed::ConfigXml> node_conf_ptr = std::make_shared<vv_feed::ConfigXml>();
   auto& node_conf = *node_conf_ptr;
-  if (!main_config.Child("graph_node", node_conf)) {
+  if (!graph_conf.Child("node", node_conf)) {
     VLOG_APP(ERROR) << "graph_node not exist in file: " << file_path;
     return;
   }
@@ -36,7 +57,7 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
     if (it != nodes_map.end()) {
       return it->second;
     }
-    auto node_config = NodeManager::instance().GetNodeInfo(name);
+    auto node_config = NodeManager::Instance().GetNodeInfo(name);
     if (!node_config) {
       VLOG_APP(ERROR) << "node name: " << name << " not found in node manager";
       std::cout << "node name: " << name << " not found in node manager" << std::endl;
@@ -52,11 +73,13 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
       return nullptr;
     }
     auto service_node = service_fac->create();
+    // 初始化每个node节点
     service_node->init(node_config);
     service_node->set_name(name);
     nodes_map[name] = service_node;
     return service_node;
   };
+  bool has_next = false;
   do {
     std::string name;
     node_conf.Attr<std::string>("name", name);
@@ -64,7 +87,7 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
     if (!service) {
       VLOG_APP(ERROR) << "graph node name: " << name << " create failed";
       std::cout << "graph node name: " << name << " create failed" << std::endl;
-      has_next = node_conf.Next("graph_node", node_conf);
+      has_next = node_conf.Next("node", node_conf);
       continue;
     }
     if (root == nullptr) {
@@ -105,13 +128,13 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
         }
       }
     }
-    has_next = node_conf.Next("graph_node", node_conf);
+    has_next = node_conf.Next("node", node_conf);
   } while (has_next);
-  graph->init(root, main_name);
-  graph_map_.insert({main_name, graph});
+  graph->init(root, graph_name);
+  return graph;
 }
 
-std::shared_ptr<Graph> GraphManager::get_graph(const std::string& main_name) {
+std::shared_ptr<dag::Graph> GraphManager::get_graph(const std::string& main_name) {
   auto it = graph_map_.find(main_name);
   if (it == graph_map_.end()) {
     return std::shared_ptr<Graph>();

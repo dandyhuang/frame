@@ -15,12 +15,12 @@ class NodeManager {
   std::unordered_map<std::string, std::shared_ptr<dag::ConfigXml>> nodes_map_;
 
  public:
-  static NodeManager& instance() {
+  static NodeManager& Instance() {
     static NodeManager inst;
     return inst;
   }
 
-  void AddNodesConf(const std::string& file_path);
+  void InitNodeConf(const std::string& file_path);
   std::shared_ptr<dag::ConfigXml> GetNodeInfo(const std::string& node_name) {
     auto it = nodes_map_.find(node_name);
     if (it != nodes_map_.end()) {
