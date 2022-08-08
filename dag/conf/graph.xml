@@ -1,0 +1,10 @@
+<topo name="g_xg">
+    <graph_node name="input" children = "extract" />
+    <graph_node name="extract" children = "embedding_local" />
+    <graph_node name="embedding_local" children = "concat" />
+    <graph_node name="concat" children = "model" />
+    <graph_node name="model" children = "response" />
+    <graph_node name="response" children = "dump_log" />
+    <graph_node name="dump_log" children = "kafka_log" />
+    <graph_node name="kafka_log" />
+</topo>
