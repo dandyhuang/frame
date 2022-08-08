@@ -60,7 +60,7 @@ $(BUILD)/%.o: %.cpp
     -o $@
 
 # calc dependency
-$(BUILD)/%.d: %.cc 
+$(BUILD)/%.d: %.cc
 	@mkdir -p $(dir $@)
 	@$(CXX) -MM $(INCLUDE) $(CFLAGS) $< | \
     sed 's#\($(notdir $*)\)\.o[ :]*#$(BUILD)/$*.o $@: #g' > $@
