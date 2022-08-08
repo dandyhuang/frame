@@ -24,13 +24,13 @@ LIBS = -lpthread $(BRPC_LIB)
 
 f_source = $(call FIND, factory factory/query_manager,o) build/$(FACTORY).o
 $(warning  "f_socure:$(f_source)"")
-$(FACTORY): $(f_source)
+$(FACTORY): $(call FIND, factory factory/query_manager,o) build/$(FACTORY).o
 	$(CXX) $(filter %.o, $^)  $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
-$(SCOPE): $(call FIND, scope_guard,o)  $(SCOPE).o
+$(SCOPE): $(call FIND, scope_guard,o)  build/$(SCOPE).o
 	$(CXX) $(filter %.o, $^)  $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
-$(DAG): $(call FIND_CPP, dag common/conf common,o)  $(dag).o
+$(DAG): $(call FIND_CPP, dag common/conf common,o)  build/$(dag).o
 	$(CXX) $(filter %.o, $^) $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
 
