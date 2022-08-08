@@ -2,9 +2,9 @@
 
 namespace common {
 
-void ConfigXml::init(const std::string& path, int id_default) {
+void ConfigXml::init(const std::string& path, int is_default) {
   tinyxml2::XMLError err;
-  if (id_default) {
+  if (is_default) {
     err = xml.Parse(path.c_str());
   } else {
     err = xml.LoadFile(path.c_str());

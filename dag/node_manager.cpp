@@ -9,7 +9,7 @@
 
 namespace dag {
 namespace common {
-void NodeManager::add_nodes_conf(const std::string& file_path) {
+void NodeManager::AddNodesConf(const std::string& file_path) {
   static std::unordered_map<std::string, std::shared_ptr<dag::ConfigXml>> xml_conf_map;
   std::shared_ptr<dag::ConfigXml> xml_conf_ptr = std::make_shared<dag::ConfigXml>();
   xml_conf_map.insert({file_path, xml_conf_ptr});

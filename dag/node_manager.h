@@ -20,8 +20,8 @@ class NodeManager {
     return inst;
   }
 
-  void add_nodes_conf(const std::string& file_path);
-  std::shared_ptr<dag::ConfigXml> get_node_info(const std::string& node_name) {
+  void AddNodesConf(const std::string& file_path);
+  std::shared_ptr<dag::ConfigXml> GetNodeInfo(const std::string& node_name) {
     auto it = nodes_map.find(node_name);
     if (it != nodes_map.end()) {
       return it->second;

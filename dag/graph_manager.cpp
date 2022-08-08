@@ -36,7 +36,7 @@ void GraphManager::add_graph_conf(const std::string& file_path) {
     if (it != nodes_map.end()) {
       return it->second;
     }
-    auto node_config = NodeManager::instance().get_node_info(name);
+    auto node_config = NodeManager::instance().GetNodeInfo(name);
     if (!node_config) {
       VLOG_APP(ERROR) << "node name: " << name << " not found in node manager";
       std::cout << "node name: " << name << " not found in node manager" << std::endl;

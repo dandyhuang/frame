@@ -19,7 +19,7 @@ class ConfigXml {
     para._node = NULL;
   }
 
-  void init(const std::string& path, int id_default = 0);
+  void init(const std::string& path, int is_default = 0);
   const tinyxml2::XMLElement* Node() const;
   bool Child(const std::string& name, ConfigXml& out) const;
   template <class T>
