@@ -16,22 +16,15 @@ static void* b_func(void* args_tmp) {
   return nullptr;
 }
 void Node::init(std::shared_ptr<dag::ConfigXml> config) {}
-void Node::run(std::shared_ptr<dag::GraphContext> context) {
+void Node::run(std::shared_ptr<frame::Context> context) {
   if (!skip(context)) {
-    auto node_timecost_monitor = context->monitor_ctx->mutable_node_timecost_monitor();
     // VLOG_APP(ERROR) << "node:[" << name << "] do_service start; " << " type: " << type() << "
     // input_num:  " << input_num << " out_nodes size:" << out_nodes.size();
     int64_t start = butil::gettimeofday_us();
-    if (node_timecost_monitor->find(get_name()) != node_timecost_monitor->end()) {
-      node_timecost_monitor->operator[](get_name())->start_time = start;
-    }
     do_service(context);
     recorder->operator<<(butil::gettimeofday_us() - start);
     // io nodes call run_output_nodes_if_ready themselves
     if (type() == std::string("cpu")) {
-      if (node_timecost_monitor->find(get_name()) != node_timecost_monitor->end()) {
-        node_timecost_monitor->operator[](get_name())->cost = butil::gettimeofday_us() - start;
-      }
       run_output_nodes_if_ready(context);
     }
   } else {
@@ -39,13 +32,13 @@ void Node::run(std::shared_ptr<dag::GraphContext> context) {
     run_output_nodes_if_ready(context);
   }
 }
-int Node::do_service(std::shared_ptr<dag::GraphContext> context) noexcept {
+int Node::do_service(std::shared_ptr<frame::Context> context) noexcept {
   // VLOG_APP(ERROR) << name << " do service; input_num:  " << input_num << " out_nodes size:" <<
   // out_nodes.size() ;
   return 0;
 }
-bool Node::skip(std::shared_ptr<dag::GraphContext> context) { return false; }
-bool Node::notify(std::shared_ptr<dag::GraphContext> context) {
+bool Node::skip(std::shared_ptr<frame::Context> context) { return false; }
+bool Node::notify(std::shared_ptr<frame::Context> context) {
   auto it = context->node_input_num_map.find(this);
   if (it == context->node_input_num_map.end()) {
     VLOG_APP(ERROR) << "node:" << this
@@ -62,7 +55,7 @@ bool Node::notify(std::shared_ptr<dag::GraphContext> context) {
   }
   return false;
 }
-void Node::run_output_nodes_if_ready(std::shared_ptr<dag::GraphContext> context) {
+void Node::run_output_nodes_if_ready(std::shared_ptr<frame::Context> context) {
   int ready_nodes_num = 0;
   Node* last_ready_node = nullptr;
   std::vector<bthread_t> bt_vec;
@@ -78,6 +71,9 @@ void Node::run_output_nodes_if_ready(std::shared_ptr<dag::GraphContext> context)
 #ifdef DAG_THREAD_USE
         std::vector<std::future<void*>> results;
         results.push_back(g_pThreadPool->enqueue(b_func, args));
+        // for (auto && result : results) {
+        //     auto res = result.get();// wait
+        // }
 #else
         bthread_t tid;
         Bargs* args = new Bargs(last_ready_node, context);
