@@ -35,11 +35,11 @@ void NodeManager::AddNodesConf(const std::string& file_path) {
     node_conf_ptr->Attr<std::string>("class", clazz);
     std::string transport;
     node_conf_ptr->Attr<std::string>("transport_name", transport);
-    auto it = nodes_map.find(name);
-    if (it != nodes_map.end()) {
+    auto it = nodes_map_.find(name);
+    if (it != nodes_map_.end()) {
       VLOG_APP(ERROR) << "node: " << name << " already exists";
     } else {
-      nodes_map[name] = node_conf_ptr;
+      nodes_map_[name] = node_conf_ptr;
     }
     if (!transport.empty()) {
       if (!GtransportManager::instance().get_transport(transport) &&
@@ -55,8 +55,8 @@ void NodeManager::AddNodesConf(const std::string& file_path) {
     node_conf_ptr = std::move(next_node_conf_ptr);
 
   } while (has_next);
-  VLOG_APP(ERROR) << "nodes_map size: " << nodes_map.size() << std::endl;
-  std::cout << "nodes_map size: " << nodes_map.size() << std::endl;
+  VLOG_APP(ERROR) << "nodes_map_ size: " << nodes_map_.size() << std::endl;
+  std::cout << "nodes_map_ size: " << nodes_map_.size() << std::endl;
 }
 }  // end of namespace common
 }  // end of namespace dag

@@ -8,22 +8,22 @@ namespace dag {
 namespace common {
 using dag::Graph;
 using dag::Node;
-void GraphManager::add_graph_conf(const std::string& file_path) {
+void GraphManager::InitGraphConf(const std::string& file_path) {
   dag::ConfigXml xml_conf;
   xml_conf.init(file_path);
-  dag::ConfigXml topo_config;
-  if (!xml_conf.Find("topo", topo_config)) {
-    VLOG_APP(ERROR) << "topo not found in " << file_path;
+  dag::ConfigXml main_config;
+  if (!xml_conf.Find("main", main_config)) {
+    VLOG_APP(ERROR) << "main not found in " << file_path;
     return;
   }
   bool has_next = false;
 
-  std::string topo_name;
-  topo_config.Attr<std::string>("name", topo_name);
+  std::string main_name;
+  main_config.Attr<std::string>("name", main_name);
 
   std::shared_ptr<dag::ConfigXml> node_conf_ptr = std::make_shared<dag::ConfigXml>();
   auto& node_conf = *node_conf_ptr;
-  if (!topo_config.Child("graph_node", node_conf)) {
+  if (!main_config.Child("graph_node", node_conf)) {
     VLOG_APP(ERROR) << "graph_node not exist in file: " << file_path;
     return;
   }
@@ -107,13 +107,13 @@ void GraphManager::add_graph_conf(const std::string& file_path) {
     }
     has_next = node_conf.Next("graph_node", node_conf);
   } while (has_next);
-  graph->init(root, topo_name);
-  graph_map.insert({topo_name, graph});
+  graph->init(root, main_name);
+  graph_map_.insert({main_name, graph});
 }
 
-std::shared_ptr<Graph> GraphManager::get_graph(const std::string& topo_name) {
-  auto it = graph_map.find(topo_name);
-  if (it == graph_map.end()) {
+std::shared_ptr<Graph> GraphManager::get_graph(const std::string& main_name) {
+  auto it = graph_map_.find(main_name);
+  if (it == graph_map_.end()) {
     return std::shared_ptr<Graph>();
   } else {
     return it->second;

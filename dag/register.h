@@ -11,7 +11,7 @@ class ServiceFactory {
 class NodeFactoryMap {
  public:
   std::map<std::string, ServiceFactory*> global_node_map;
-  static std::shared_ptr<NodeFactoryMap> instance();
+  static std::shared_ptr<NodeFactoryMap> Instance();
 
  private:
   NodeFactoryMap() = default;

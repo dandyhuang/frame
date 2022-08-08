@@ -12,7 +12,7 @@ using namespace vlog;
 class NodeManager {
  private:
   NodeManager(){};
-  std::unordered_map<std::string, std::shared_ptr<dag::ConfigXml>> nodes_map;
+  std::unordered_map<std::string, std::shared_ptr<dag::ConfigXml>> nodes_map_;
 
  public:
   static NodeManager& instance() {
@@ -22,11 +22,11 @@ class NodeManager {
 
   void AddNodesConf(const std::string& file_path);
   std::shared_ptr<dag::ConfigXml> GetNodeInfo(const std::string& node_name) {
-    auto it = nodes_map.find(node_name);
-    if (it != nodes_map.end()) {
+    auto it = nodes_map_.find(node_name);
+    if (it != nodes_map_.end()) {
       return it->second;
     } else {
-      std::cout << "node_name: " << node_name << " found in nodes_map" << std::endl;
+      std::cout << "node_name: " << node_name << " found in nodes_map_" << std::endl;
       return std::shared_ptr<dag::ConfigXml>();
     }
   }
