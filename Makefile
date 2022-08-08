@@ -62,4 +62,4 @@ $(BUILD)/%.d: %.cc
 all: $(FACTORY) $(SCOPE) $(DAG)
 
 clean:
-	rm -rf $(build) *.o  $(FACTORY) $(SCOPE)
+	rm -rf $(BUILD) *.o  $(FACTORY) $(SCOPE)
