@@ -22,19 +22,19 @@ INCLUDE= -I./ -Ifactory/ \
 	-Icommon -Icommon/conf $(BRPC_INC)
 LIBS = -lpthread $(BRPC_LIB)
 
-$(FACTORY): $(call FIND, factory factory/query_manager,o) $(FACTORY).o 
-	$(CXX) $(filter %.o, $^) $(FACTORY).o $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
+$(FACTORY): $(call FIND, factory factory/query_manager,o) $(FACTORY).o
+	$(CXX) $(filter %.o, $^)  $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
-$(SCOPE): $(call FIND, scope_guard,o)  $(SCOPE).o 
-	$(CXX) $(filter %.o, $^)  $(SCOPE).o $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
+$(SCOPE): $(call FIND, scope_guard,o)  $(SCOPE).o
+	$(CXX) $(filter %.o, $^)  $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
 $(DAG): $(call FIND_CPP, dag common/conf common,o)  $(dag).o
-	$(CXX) $(filter %.o, $^)  $(dag).o $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
+	$(CXX) $(filter %.o, $^) $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
 
 
-# %.o: %.cc
-# 	${CXX} -c ${CFLAGS} $(INCLUDE) $(CPPINCS) $< -o $@
+$(BUILD)/%.o: %.cc
+	${CXX} -c ${CFLAGS} $(INCLUDE) $(CPPINCS) $< -o $@
 
 # %.o: %.cpp
 # 	${CXX} -c ${CFLAGS} $(INCLUDE) $(CPPINCS) $< -o $@
