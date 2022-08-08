@@ -1,4 +1,6 @@
 .PHONY:clean
+
+all: $(FACTORY) $(SCOPE) $(DAG)
 .PHONY : all
 
 CXX= g++
@@ -62,7 +64,7 @@ $(BUILD)/%.d: %.cc
 	@$(CXX) -MM $(INCLUDE) $(CFLAGS) $< | \
     sed 's#\($(notdir $*)\)\.o[ :]*#$(BUILD)/$*.o $@: #g' > $@
 
-all: $(FACTORY) $(SCOPE) $(DAG)
+
 
 clean:
 	rm -rf $(BUILD) *.o  $(FACTORY) $(SCOPE) $(DAG)
