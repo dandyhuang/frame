@@ -22,8 +22,9 @@ INCLUDE= -I./ -Ifactory/ \
 	-Icommon -Icommon/conf $(BRPC_INC)
 LIBS = -lpthread $(BRPC_LIB)
 
-$(FACTORY): $(call FIND, factory factory/query_manager,o) $(FACTORY).o
-	$(CXX) $(filter %.o, $(FACTORY))  $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
+f_source = $(call FIND, factory factory/query_manager,o) $(FACTORY).o
+$(FACTORY): $(f_source)
+	$(CXX) $(filter %.o, $^)  $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
 $(SCOPE): $(call FIND, scope_guard,o)  $(SCOPE).o
 	$(CXX) $(filter %.o, $^)  $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
