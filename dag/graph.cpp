@@ -1,5 +1,12 @@
 #include "dag/graph.h"
 
+#ifdef DAG_THREAD_USE
+#include "common/thread_pool.h"
+ThreadPool* g_pThreadPool = new (std::nothrow)ThreadPool(32);
+#else
+#include <brpc/channel.h>
+#endif
+
 namespace dag {
 static void* b_func(void* args_tmp) {
   Bargs* args = (Bargs*)args_tmp;
@@ -69,10 +76,8 @@ void Node::run_output_nodes_if_ready(std::shared_ptr<dag::GraphContext> context)
       ++ready_nodes_num;
       if (last_ready_node != nullptr) {
 #ifdef DAG_THREAD_USE
-        bthread_t tid;
-        Bargs* args = new Bargs(last_ready_node, context);
-        bthread_start_background(&tid, &BTHREAD_ATTR_SMALL, b_func, args);
-        bt_vec.push_back(tid);
+        std::vector<std::future<void*>> results;
+        results.push_back(g_pThreadPool->enqueue(b_func, args));
 #else
         bthread_t tid;
         Bargs* args = new Bargs(last_ready_node, context);
