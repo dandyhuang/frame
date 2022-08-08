@@ -1,6 +1,6 @@
 .PHONY:clean
 
-all: $(FACTORY) $(SCOPE) $(DAG)
+all : $(FACTORY) $(SCOPE) $(DAG)
 .PHONY : all
 
 CXX= g++
@@ -23,6 +23,7 @@ INCLUDE= -I./ -Ifactory/ \
 	-Iscope_guard \
 	-Idag/ -Icontext \
 	-Icommon -Icommon/conf $(BRPC_INC)
+
 LIBS = -lpthread $(BRPC_LIB)
 
 f_source = $(call FIND, factory factory/query_manager,o) build/$(FACTORY).o
