@@ -1,6 +1,6 @@
 .PHONY:clean
 
-all : $(FACTORY) $(SCOPE) $(DAG)
+all: $(FACTORY) $(SCOPE) $(DAG)
 .PHONY : all
 
 CXX= g++
