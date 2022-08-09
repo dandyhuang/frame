@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 
-#include "client/redis_client_manager.h"
 #include "dag/gtransport_manager.h"
 // #include "dag/global.h"
 
