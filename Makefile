@@ -27,7 +27,7 @@ BRPC_LIB= -L$(THIRD_PARTY)/glog/lib64/ -lglog -L$(THIRD_PARTY)/brpc/lib64/ -lbrp
 	 -L$(THIRD_PARTY)/leveldb/lib64/ -lleveldb \
 	 -L$(THIRD_PARTY)/gflags/lib64/ -lgflags  \
 	 -L$(THIRD_PARTY)/gtest/lib64/ -lgtest -L$(THIRD_PARTY)/protobuf/lib64/ -lprotobuf -lprotoc \
-	 -L$(THIRD_PARTY)/xml/lib64/ -ltinyxml $(BOOST_LIB) -pthread -ldl -lpthread  -lcrypt -lm 
+	 -L$(THIRD_PARTY)/xml/lib64/ -ltinyxml $(BOOST_LIB) -lssl -lcrypto -pthread -ldl -lpthread  -lcrypt -lm 
 
 
 
