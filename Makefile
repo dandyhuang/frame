@@ -9,8 +9,8 @@ BIN =
 FACTORY=$(BIN)test_factory
 SCOPE=$(BIN)test_scope_guard
 DAG=$(BIN)test_dag
-FIND = $(patsubst %.cc, $(BUILD)/%.$(2), $(shell find $(1) -name "*.cc" -type f))
-FIND_CPP = $(patsubst %.cpp, $(BUILD)/%.$(2), $(shell find $(1) -name "*.cpp" -type f))
+# FIND = $(patsubst %.cc, $(BUILD)/%.$(2), $(shell find $(1) -name "*.cc" -type f))
+FIND = $(patsubst %.cpp, $(BUILD)/%.$(2), $(shell find $(1) -regex  "*.cpp｜*.cc" -type f))
 
 
 all: $(FACTORY) $(SCOPE) $(DAG)
@@ -49,7 +49,7 @@ $(FACTORY): $(call FIND, factory factory/query_manager,o) build/$(FACTORY).o
 $(SCOPE): $(call FIND, scope_guard,o)  build/$(SCOPE).o
 	$(CXX) $(filter %.o, $^)  $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
-$(DAG): $(call FIND_CPP, dag common/conf common dag_test,o)  build/$(DAG).o
+$(DAG): $(call FIND, dag common/conf common dag_test,o)  build/$(DAG).o
 	$(CXX) $(filter %.o, $^) $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
 
