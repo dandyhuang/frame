@@ -2,7 +2,6 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include "common/conf/config_xml.h"
 #include "common/loghelper.h"
 #include "dag/graph.h"
 #include "dag/node_manager.h"

@@ -2,6 +2,8 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+
+#include "common/conf/config_xml.h"
 namespace dag {
 class Graph;
 class Node;
