@@ -18,7 +18,7 @@ int main() {
   faiss::FaissResponse rsp;
   auto graph = ::dag::common::GraphManager::Instance().get_graph(graph_name);
   if (graph) {
-    graph->run<faiss::FaissRequest, faiss::FaissResponse>(cntl, &req, &rsp, done);
+    graph->run<faiss::FaissRequest, faiss::FaissResponse>(nullptr, &req, &rsp, done);
   } else {
     if (done != nullptr) done->Run();
   }
