@@ -4,4 +4,5 @@
 int main() {
   auto query = GET_QUERY("Query805");
   query->QueryData();
+  return 0;
 }

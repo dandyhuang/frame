@@ -15,4 +15,5 @@ int main() {
     map_report["query_dp"] = "1";
 
   }));
+  return code;
 }
