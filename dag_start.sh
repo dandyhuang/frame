@@ -1,2 +1,2 @@
-sh thirdparty/tools/source.sh
-./test_dag
+source thirdparty/tools/source.sh
+test_dag
