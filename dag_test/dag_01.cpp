@@ -13,6 +13,7 @@ int dag_001::do_service(std::shared_ptr<frame::Context> context) noexcept {
          usleep(10);
       }
    }
+   std::cout << "dag_001" << std::endl;
 }
 
 bool dag_001::skip(std::shared_ptr<frame::Context> context) { return false; }
