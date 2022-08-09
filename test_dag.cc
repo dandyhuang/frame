@@ -12,14 +12,11 @@ int main() {
   dag::common::GraphManager::Instance().InitGraphConf(graph_path);
 
   std::string graph_name = "default";
-  if (!request->graph_name().empty()) {
-    graph_name = request->graph_name();
-  }
   google::protobuf::Closure* done;
   // brpc::ClosureGuard done_guard(done);
   faiss::FaissRequest req;
-  faiss::FaissResponse rsp auto graph =
-      ::dag::common::GraphManager::Instance().get_graph(graph_name);
+  faiss::FaissResponse rsp;
+  auto graph = ::dag::common::GraphManager::Instance().get_graph(graph_name);
   if (graph) {
     graph->run<faiss::FaissRequest, faiss::FaissResponse>(cntl, &req, &rsp, done);
   } else {
