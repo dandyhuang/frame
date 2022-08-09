@@ -49,7 +49,7 @@ std::shared_ptr<dag::Graph> CreateGraph(const ::common::ConfigXml& graph_conf) {
   auto& node_conf = *node_conf_ptr;
   if (!graph_conf.Child("node", node_conf)) {
     VLOG_APP(ERROR) << "graph_node not exist in file: ";
-    return;
+    return nullptr;
   }
   std::shared_ptr<dag::Graph> graph = std::make_shared<dag::Graph>();
   dag::Node* root = nullptr;
