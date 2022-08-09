@@ -12,7 +12,7 @@
 #include "brpc/callback.h"
 #include "bthread/bthread.h"
 #include "bthread/id.h"
-#include "common/config_xml.h"
+#include "common/conf/config_xml.h"
 #include "common/loghelper.h"
 #include "context/context.h"
 #include "dag/graph_context.h"

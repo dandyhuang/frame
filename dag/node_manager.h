@@ -3,7 +3,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include "common/config_xml.h"
+#include "common/conf/config_xml.h"
 #include "common/loghelper.h"
 
 namespace dag {
