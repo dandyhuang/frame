@@ -30,12 +30,14 @@ int main(int argc, char const* argv[]) {
   // brpc::ClosureGuard done_guard(done);
   faiss::FaissRequest req;
   faiss::FaissResponse rsp;
+  int64_t start = butil::gettimeofday_us();
   auto graph = ::dag::common::GraphManager::Instance().get_graph(graph_name);
   if (graph) {
     graph->run<faiss::FaissRequest, faiss::FaissResponse>(nullptr, &req, &rsp, done);
   } else {
     if (done != nullptr) done->Run();
   }
+  std::cout << "cost:" << butil::gettimeofday_us() - start << std::endl;
   sleep(5);
   return 0;
 }
