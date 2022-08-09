@@ -26,11 +26,11 @@ class NodeFactoryMap {
   class ServiceClass##Register {                                \
    public:                                                      \
     ServiceClass##Register() {                                  \
-      dag::NodeFactoryMap::instance()->global_node_map.insert( \
+      dag::NodeFactoryMap::Instance()->global_node_map.insert( \
           {#ServiceClass, new ServiceClass##Factory()});        \
     }                                                           \
   };                                                            \
   static ServiceClass##Register ServiceClass##_inst_;
 
 #define GET_SERVICE_FACTORY(ServiceClassName) \
-  dag::NodeFactoryMap::instance()->global_node_map[ServiceClassName];
+  dag::NodeFactoryMap::Instance()->global_node_map[ServiceClassName];

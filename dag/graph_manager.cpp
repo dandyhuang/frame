@@ -4,6 +4,9 @@
 
 #include "dag/graph.h"
 #include "dag/node_manager.h"
+#include "common/loghelper.h"
+#include "dag/register.h"
+
 namespace dag {
 namespace common {
 using dag::Graph;
@@ -34,7 +37,7 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
       return;
     }
 
-    graph_map_.insert({name, graph});
+    graph_map_.insert({name, graph_ptr});
     has_next = graph.Next("graph", graph);
   } while (has_next);
 }
@@ -42,10 +45,10 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
 std::shared_ptr<dag::Graph> CreateGraph(const ::common::ConfigXml& graph_conf) {
   std::string graph_name;
   graph_conf.Attr<std::string>("name", graph_name);
-  std::shared_ptr<vv_feed::ConfigXml> node_conf_ptr = std::make_shared<vv_feed::ConfigXml>();
+  std::shared_ptr<::common::ConfigXml> node_conf_ptr = std::make_shared<::common::ConfigXml>();
   auto& node_conf = *node_conf_ptr;
   if (!graph_conf.Child("node", node_conf)) {
-    VLOG_APP(ERROR) << "graph_node not exist in file: " << file_path;
+    VLOG_APP(ERROR) << "graph_node not exist in file: ";
     return;
   }
   std::shared_ptr<dag::Graph> graph = std::make_shared<dag::Graph>();
