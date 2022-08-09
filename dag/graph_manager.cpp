@@ -9,9 +9,9 @@ namespace common {
 using dag::Graph;
 using dag::Node;
 void GraphManager::InitGraphConf(const std::string& file_path) {
-  dag::ConfigXml xml_conf;
+  common::ConfigXml xml_conf;
   xml_conf.init(file_path);
-  dag::ConfigXml main_config;
+  common::ConfigXml main_config;
   if (!xml_conf.Find("main", main_config)) {
     VLOG_APP(ERROR) << "main not found in " << file_path;
     return;
@@ -20,7 +20,7 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
 
   std::string main_name;
   main_config.Attr<std::string>("name", main_name);
-  dag::ConfigXml graph;
+  common::ConfigXml graph;
   if (!main_config.Child("graph", graph)) {
     main_config << file_path << "graph node not exist in file";
     return;
@@ -39,7 +39,7 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
   } while (has_next);
 }
 
-std::shared_ptr<dag::Graph> CreateGraph(const dag::ConfigXml& graph_conf) {
+std::shared_ptr<dag::Graph> CreateGraph(const common::ConfigXml& graph_conf) {
   std::string graph_name;
   graph_conf.Attr<std::string>("name", graph_name);
   std::shared_ptr<vv_feed::ConfigXml> node_conf_ptr = std::make_shared<vv_feed::ConfigXml>();

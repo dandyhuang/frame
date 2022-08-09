@@ -32,7 +32,7 @@ struct Bargs {
 class Node {
  public:
   Node(const std::string& name = "") : name(name) {}
-  virtual void init(std::shared_ptr<dag::ConfigXml>);
+  virtual void init(std::shared_ptr<common::ConfigXml>);
   void run(std::shared_ptr<frame::Context> context);
   virtual int do_service(std::shared_ptr<frame::Context> context) noexcept;
   virtual bool skip(std::shared_ptr<frame::Context> context);
