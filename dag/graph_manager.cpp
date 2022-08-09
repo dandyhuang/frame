@@ -42,7 +42,7 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
   } while (has_next);
 }
 
-std::shared_ptr<dag::Graph> CreateGraph(const ::common::ConfigXml& graph_conf) {
+std::shared_ptr<dag::Graph> GraphManager::CreateGraph(const ::common::ConfigXml& graph_conf) {
   std::string graph_name;
   graph_conf.Attr<std::string>("name", graph_name);
   std::shared_ptr<::common::ConfigXml> node_conf_ptr = std::make_shared<::common::ConfigXml>();
