@@ -1,0 +1,54 @@
+syntax = "proto3";
+package faiss_search;
+
+option cc_generic_services = true;
+
+message UserVectorList {
+        repeated float user_vector = 1;
+        string model_name = 2;
+        int32 recall_num = 3;
+};
+
+message FaissRequest {
+    string user_id              = 1;   //用户imei 非必填
+    repeated float user_vector = 2;   //用户向量,维数必须和item模型文件保持一致
+    string model                = 3;   //faiss item 模型名
+    string version              = 4;   //faiss item 模型版本号
+    int32 mode                  = 5;   //0-版本不存在返回空 1-版本不存在使用最新版本
+    int32 recall_num            = 6;   //召回条数
+    bool normalize              = 7;   //是否归一化
+    map<int32, UserVectorList> user_vector_map = 8; // 多组用户向量
+};
+
+message FaissItem {
+    string item_id              =1;
+    float score                 =2;
+};
+
+message FaissItemList {
+        repeated FaissItem item_list = 1;
+}; 
+
+message FaissResponse {
+    int32 err_no                    = 1;
+    string err_msg                  = 2;
+    repeated FaissItem item_list    = 3;
+    map<int32, FaissItemList> item_map = 4; // 多组用户向量召回的item
+    string model_version            = 5;    // 全量模型版本
+    string incr_model_version       = 6;    // 增量模型版本
+};
+
+message DeleteRequest {
+    string model                = 1;   //faiss item 模型名
+};
+
+message DeleteResponse {
+    int32 err_no                    = 1;
+    string err_msg                  = 2;
+};
+
+service FaissService {
+    rpc faissSearch(FaissRequest) returns (FaissResponse);  //faiss检索计算 
+    rpc deleteModel(DeleteRequest) returns (DeleteResponse);  //删除model 
+};
+
