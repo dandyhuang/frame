@@ -20,7 +20,7 @@ BOOST_INC = -I$(THIRD_PARTY)/boost/include
 BOOST_LIB = -L$(THIRD_PARTY)/boost/lib64/ -lboost_filesystem -L$(THIRD_PARTY)/boost/lib64/ -lboost_system -L$(THIRD_PARTY)/boost/lib64/ -lboost_locale \
 		-L$(THIRD_PARTY)/boost/lib64/ -lboost_thread -L$(THIRD_PARTY)/boost/lib64/ -lboost_regex
 BRPC_INC=-I$(THIRD_PARTY)/brpc/include -I$(THIRD_PARTY)/glog/include -I$(THIRD_PARTY)/gtest/include \
-	 -I$(THIRD_PARTY)/gflags/include -I$(THIRD_PARTY)/protobuf/include $(THIRD_PARTY)/leveldb/include  \
+	 -I$(THIRD_PARTY)/gflags/include -I$(THIRD_PARTY)/protobuf/include $(THIRD_PARTY)/leveldb/ \
 	-I$(THIRD_PARTY)/xml/include $(BOOST_INC) 
 BRPC_LIB= -L$(THIRD_PARTY)/brpc/lib64/ -lbrpc \
 	 -lbutil -lbthread -lbvar -ljson2pb -lmcpack2pb -lcc_brpc_internal_proto -lcc_brpc_idl_options_proto \
