@@ -41,7 +41,7 @@ $(FACTORY): $(call FIND, factory factory/query_manager,o) build/$(FACTORY).o
 $(SCOPE): $(call FIND, scope_guard,o)  build/$(SCOPE).o
 	$(CXX) $(filter %.o, $^)  $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
-$(DAG): $(call FIND_CPP, dag common/conf common,o)  build/$(dag).o
+$(DAG): $(call FIND_CPP, dag common/conf common dag_test,o)  build/$(DAG).o
 	$(CXX) $(filter %.o, $^) $(CFLAGS) $(INCLUDE) -o $@ $(LIBS)
 
 
