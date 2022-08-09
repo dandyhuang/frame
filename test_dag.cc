@@ -36,5 +36,6 @@ int main(int argc, char const* argv[]) {
   } else {
     if (done != nullptr) done->Run();
   }
+  sleep(5);
   return 0;
 }
