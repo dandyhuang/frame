@@ -10,7 +10,7 @@ FACTORY=$(BIN)test_factory
 SCOPE=$(BIN)test_scope_guard
 DAG=$(BIN)test_dag
 # FIND = $(patsubst %.cc, $(BUILD)/%.$(2), $(shell find $(1) -name "*.cc" -type f))
-FIND = $(patsubst %.cpp, $(BUILD)/%.$(2), $(shell find $(1) -regex  "*.cpp｜*.cc" -type f))
+FIND = $(patsubst %.cpp %.cc, $(BUILD)/%.$(2), $(shell find $(1) -regex  "*.cpp｜*.cc" -type f))
 
 
 all: $(FACTORY) $(SCOPE) $(DAG)
