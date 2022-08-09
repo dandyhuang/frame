@@ -27,7 +27,7 @@ BRPC_LIB= -L$(THIRD_PARTY)/glog/lib64/ -lglog -L$(THIRD_PARTY)/brpc/lib64/ -lbrp
 	 -L$(THIRD_PARTY)/leveldb/lib64/ -lleveldb \
 	 -L$(THIRD_PARTY)/gflags/lib64/ -lgflags  \
 	 -L$(THIRD_PARTY)/gtest/lib64/ -lgtest -L$(THIRD_PARTY)/protobuf/lib64/ -lprotobuf -lprotoc \
-	 -L$(THIRD_PARTY)/xml/lib64/ -ltinyxml $(BOOST_LIB) 
+	 -L$(THIRD_PARTY)/xml/lib64/ -ltinyxml $(BOOST_LIB) -pthread -ldl -lpthread  -lcrypt -lm 
 
 
 
@@ -38,7 +38,7 @@ INCLUDE= -I./ -Ifactory/ \
 	-Idag/ -Icontext \
 	-Icommon -Icommon/conf $(BRPC_INC)
 
-LIBS = -lpthread $(BRPC_LIB)
+LIBS = $(BRPC_LIB)
 
 f_source = $(call FIND, factory factory/query_manager,o) build/$(FACTORY).o
 $(warning  "f_socure:$(f_source)"")
