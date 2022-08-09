@@ -5,16 +5,17 @@ CXX= g++
 CPPFLAGS= -g --std=c++11 -Wall -O2 -fPIC
 CFLAGS := $(CPPFLAGS)
 BUILD = build
-FACTORY=test_factory
-SCOPE=test_scope_guard
-DAG=test_dag
+BIN = bin
+FACTORY=$(BIN)/test_factory
+SCOPE=$(BIN)/test_scope_guard
+DAG=$(BIN)/test_dag
 FIND = $(patsubst %.cc, $(BUILD)/%.$(2), $(shell find $(1) -name "*.cc" -type f))
 FIND_CPP = $(patsubst %.cpp, $(BUILD)/%.$(2), $(shell find $(1) -name "*.cpp" -type f))
 
 
 all: $(FACTORY) $(SCOPE) $(DAG)
 .PHONY : all
-
+mkdir -p $(BIN)
 THIRD_PARTY=./thirdparty/
 BOOST_INC = -I$(THIRD_PARTY)/boost/include
 BOOST_LIB = -L$(THIRD_PARTY)/boost/lib64/ -lboost_filesystem -L$(THIRD_PARTY)/boost/lib64/ -lboost_system -L$(THIRD_PARTY)/boost/lib64/ -lboost_locale \
