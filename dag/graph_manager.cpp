@@ -2,9 +2,10 @@
 
 #include <boost/algorithm/string.hpp>
 
+#include "common/conf/config_xml.h"
+#include "common/loghelper.h"
 #include "dag/graph.h"
 #include "dag/node_manager.h"
-#include "common/loghelper.h"
 #include "dag/register.h"
 
 namespace dag {
@@ -25,7 +26,7 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
   main_config.Attr<std::string>("name", main_name);
   ::common::ConfigXml graph;
   if (!main_config.Child("graph", graph)) {
-    VLOG_APP(ERROR)  << file_path << "graph node not exist in file";
+    VLOG_APP(ERROR) << file_path << "graph node not exist in file";
     return;
   }
   do {
