@@ -5,7 +5,7 @@ CXX= g++
 CPPFLAGS= -g --std=c++11 -Wall -O2 -fPIC
 CFLAGS := $(CPPFLAGS)
 BUILD = build
-BIN = bin
+BIN =
 FACTORY=$(BIN)/test_factory
 SCOPE=$(BIN)/test_scope_guard
 DAG=$(BIN)/test_dag
