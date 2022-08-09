@@ -11,7 +11,7 @@ class dag_000 : public dag::Node {
  public:
   dag_000(const string& serviceName) : dag::Node(serviceName){};
   dag_000() : dag::Node(){};
-  virtual ~dag_001(){};
+  virtual ~dag_000(){};
   int do_service(std::shared_ptr<frame::Context> context) noexcept override ;
   virtual bool skip(std::shared_ptr<frame::Context> context) override;
 
