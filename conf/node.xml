@@ -44,8 +44,8 @@
           model_node_name="model"
     />
     <node 
-          name="dump_log"
-          class="DumpLogService"
+          name="dag_000"
+          class="dag_000"
     />
     <node
           name="kafka_log"
