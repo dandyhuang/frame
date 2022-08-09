@@ -6,9 +6,9 @@ CPPFLAGS= -g --std=c++11 -Wall -O2 -fPIC
 CFLAGS := $(CPPFLAGS)
 BUILD = build
 BIN =
-FACTORY=$(BIN)/test_factory
-SCOPE=$(BIN)/test_scope_guard
-DAG=$(BIN)/test_dag
+FACTORY=$(BIN)test_factory
+SCOPE=$(BIN)test_scope_guard
+DAG=$(BIN)test_dag
 FIND = $(patsubst %.cc, $(BUILD)/%.$(2), $(shell find $(1) -name "*.cc" -type f))
 FIND_CPP = $(patsubst %.cpp, $(BUILD)/%.$(2), $(shell find $(1) -name "*.cpp" -type f))
 
