@@ -3,7 +3,6 @@
 #include "dag/util.h"
 #include <time.h>
 #include "common/loghelper.h"
-#include "common/concurrent_map.h"
 namespace Rec {
 namespace Util {
 using namespace vlog;
