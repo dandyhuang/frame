@@ -25,7 +25,7 @@ void GraphManager::InitGraphConf(const std::string& file_path) {
   main_config.Attr<std::string>("name", main_name);
   ::common::ConfigXml graph;
   if (!main_config.Child("graph", graph)) {
-    main_config << file_path << "graph node not exist in file";
+    VLOG_APP(ERROR)  << file_path << "graph node not exist in file";
     return;
   }
   do {
