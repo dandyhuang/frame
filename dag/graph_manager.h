@@ -23,7 +23,7 @@ class GraphManager {
 
  private:
   dag::Node* create_service(const std::string name);
-  std::shared_ptr<dag::Graph> CreateGraph(std::shared_ptr<dag::Graph> graph);
+  std::shared_ptr<dag::Graph> CreateGraph(const ::common::ConfigXml& graph);
   std::unordered_map<std::string, std::shared_ptr<dag::Graph>> graph_map_;
 };
 }  // namespace common
