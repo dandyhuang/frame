@@ -1,5 +1,5 @@
 syntax = "proto3";
-package faiss_search;
+package faiss;
 
 option cc_generic_services = true;
 
