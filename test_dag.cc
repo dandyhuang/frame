@@ -1,11 +1,21 @@
 #include <iostream>
 
+#include "common/loghelper.h"
 #include "dag/graph.h"
 #include "dag/graph_manager.h"
 #include "dag/node_manager.h"
+#include "gflags/gflags.h"
+#include "glog/logging.h"
 #include "proto/faiss_search.pb.h"
 
-int main() {
+DEFINE_string(gflags_config, "conf/gflags.conf", "gflags conf");
+int main(int argc, char const* argv[]) {
+  google::AllowCommandLineReparsing();
+  google::ParseCommandLineFlags(&argc, const_cast<char***>(&argv), true);
+  google::SetCommandLineOption("flagfile", FLAGS_gflags_config.c_str());
+  //  使用monitor error打印监控日
+  vlog::global_vlog_helper().setAppLogLevel(0);
+
   std::string node_path = "./conf/node.xml";
   dag::common::NodeManager::Instance().InitNodeConf(node_path);
   std::string graph_path = "./conf/graph.xml";
