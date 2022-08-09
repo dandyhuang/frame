@@ -18,12 +18,12 @@ all: $(FACTORY) $(SCOPE) $(DAG)
 THIRD_PARTY=./thirdparty/
 BOOST_INC = -I$(THIRD_PARTY)/boost/include
 BOOST_LIB = -L$(THIRD_PARTY)/boost/lib64/ -lboost_filesystem -L$(THIRD_PARTY)/boost/lib64/ -lboost_system -L$(THIRD_PARTY)/boost/lib64/ -lboost_locale \
-		-L$(THIRD_PARTY)/boost/lib64/ -lboost_thread -lboost_regex
+		-L$(THIRD_PARTY)/boost/lib64/ -lboost_thread -L$(THIRD_PARTY)/boost/lib64/ -lboost_regex
 BRPC_INC=-I$(THIRD_PARTY)/brpc/include -I$(THIRD_PARTY)/glog/include -I$(THIRD_PARTY)/gtest/include \
 	 -I$(THIRD_PARTY)/protobuf/include -I$(THIRD_PARTY)/xml/include $(BOOST_INC)
-BRPC_LIB=-L$(THIRD_PARTY)/brpc/lib64/ -lbrpc -L$(THIRD_PARTY)/glog/lib64/ -lglog \
+BRPC_LIB=-L$(THIRD_PARTY)/glog/lib64/ -lglog \
 	 -L$(THIRD_PARTY)/gtest/lib64/ -lgtest -L$(THIRD_PARTY)/protobuf/lib64/ -lprotobuf \
-	 -L$(THIRD_PARTY)/xml/lib64/ -ltinyxml $(BOOST_LIB)
+	 -L$(THIRD_PARTY)/xml/lib64/ -ltinyxml $(BOOST_LIB) -L$(THIRD_PARTY)/brpc/lib64/ -lbrpc
 
 
 
