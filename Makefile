@@ -16,8 +16,11 @@ all: $(FACTORY) $(SCOPE) $(DAG)
 .PHONY : all
 
 THIRD_PARTY=./thirdparty/
-BRPC_INC=-I$(THIRD_PARTY)/brpc/include
-BRPC_LIB=-L$(THIRD_PARTY)/brpc/lib64/ -lbrpc
+BRPC_INC=-I$(THIRD_PARTY)/brpc/include -I$(THIRD_PARTY)/glog/include -I$(THIRD_PARTY)/gtest/include
+BRPC_LIB=-L$(THIRD_PARTY)/brpc/lib64/ -lbrpc -L$(THIRD_PARTY)/glog/lib64/ -lglog \
+	 -L$(THIRD_PARTY)/gtest/lib64/ -lgtest
+
+
 
 INCLUDE= -I./ -Ifactory/ \
 	-Ifactory/query_manager \
