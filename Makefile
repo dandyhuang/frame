@@ -23,7 +23,7 @@ BRPC_INC=-I$(THIRD_PARTY)/brpc/include -I$(THIRD_PARTY)/glog/include -I$(THIRD_P
 	 -I$(THIRD_PARTY)/gflags/include -I$(THIRD_PARTY)/protobuf/include \
 	-I$(THIRD_PARTY)/xml/include $(BOOST_INC) 
 BRPC_LIB= -L$(THIRD_PARTY)/glog/lib64/ -lglog -L$(THIRD_PARTY)/brpc/lib64/ -lbrpc \
-	 -lbvar -lbutil -lbthread -ljson2pb -lmcpack2pb -lcc_brpc_internal_proto -lcc_brpc_idl_options_proto \
+	 -lbthread -lbvar -lbutil -ljson2pb -lmcpack2pb -lcc_brpc_internal_proto -lcc_brpc_idl_options_proto \
 	 -L$(THIRD_PARTY)/leveldb/lib64/ -lleveldb \
 	 -L$(THIRD_PARTY)/gflags/lib64/ -lgflags  \
 	 -L$(THIRD_PARTY)/gtest/lib64/ -lgtest -L$(THIRD_PARTY)/protobuf/lib64/ -lprotobuf -lprotoc \
