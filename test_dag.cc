@@ -15,7 +15,10 @@ int main(int argc, char const* argv[]) {
   google::SetCommandLineOption("flagfile", FLAGS_gflags_config.c_str());
   //  使用monitor error打印监控日
   vlog::global_vlog_helper().initialize(argc, const_cast<char**>(argv));
+  vlog::global_vlog_helper().setMonitorLogLevel(0);
   vlog::global_vlog_helper().setAppLogLevel(0);
+  vlog::global_vlog_helper().setSysLogLevel(0);
+  vlog::global_vlog_helper().setModelLogLevel(0);
 
   std::string node_path = "./conf/node.xml";
   dag::common::NodeManager::Instance().InitNodeConf(node_path);
