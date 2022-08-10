@@ -1,5 +1,5 @@
-#ifndef _VLOG_LOG_HELPER_HEAD_
-#define _VLOG_LOG_HELPER_HEAD_
+#pragma once
+
 
 #include <gflags/gflags.h>
 #include <glog/logging.h>
@@ -210,4 +210,3 @@ inline std::map<std::string, int>& global_log_level() {
           : google::LogMessageVoidify() &                                      \
                 LOG_TO_SINK_BUT_NOT_TO_LOGFILE(vlog::global_vlog_helper().getModelLog(), severity)
 
-#endif
