@@ -24,7 +24,7 @@ int main(int argc, char const* argv[]) {
   dag::common::NodeManager::Instance().InitNodeConf(node_path);
   std::string graph_path = "./conf/graph.xml";
   dag::common::GraphManager::Instance().InitGraphConf(graph_path);
-
+  #define Dag_Synchronize_Use 1
   std::string graph_name = "default";
   google::protobuf::Closure* done;
   // brpc::ClosureGuard done_guard(done);
@@ -37,6 +37,7 @@ int main(int argc, char const* argv[]) {
   } else {
     if (done != nullptr) done->Run();
   }
+
   std::cout << "cost:" << butil::gettimeofday_us() - start << std::endl;
   sleep(5);
   return 0;

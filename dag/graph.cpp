@@ -79,6 +79,7 @@ void Node::run_output_nodes_if_ready(std::shared_ptr<frame::Context> context) {
         Bargs* args = new Bargs(last_ready_node, context);
         bthread_start_background(&tid, &BTHREAD_ATTR_SMALL, b_func, args);
         bt_vec.push_back(tid);
+        context->mutable_bt_vec()->push_back(tid);
 #endif
       }
       last_ready_node = output_node;
