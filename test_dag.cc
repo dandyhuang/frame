@@ -36,8 +36,8 @@ int main(int argc, char const* argv[]) {
   for (auto i = 0; i < 10; i++) {
     auto graph = ::dag::common::GraphManager::Instance().get_graph(graph_name);
     if (graph) {
-      graph->run<faiss::FaissRequest, faiss::FaissResponse, frame::Context>(nullptr, &req, &rsp,
-                                                                            done, context);
+      graph->run<faiss::FaissRequest, faiss::FaissResponse, std::shared_ptr<frame::Context>>(
+          nullptr, &req, &rsp, done, context);
     } else {
       if (done != nullptr) done->Run();
     }
