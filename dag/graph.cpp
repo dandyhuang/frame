@@ -7,7 +7,7 @@ common::ThreadPool* g_pThreadPool = new (std::nothrow)common::ThreadPool(3);
 #include <brpc/channel.h>
 #endif
 extern std::vector<bthread_t> g_test_bt_vec;
-extern std::vector<std::future<void*>> g_testfuture_res;
+extern std::vector<std::shared_ptr<std::future<void*>>> g_testfuture_res;
 namespace dag {
 static void* b_func(void* args_tmp) {
   Bargs* args = (Bargs*)args_tmp;
@@ -75,13 +75,13 @@ void Node::run_output_nodes_if_ready(std::shared_ptr<frame::Context> context) {
         // for (auto && result : results) {
         //     auto res = result.get();// wait
         // }
-        // g_testfuture_res.emplace_back(std::move(res);
+        g_testfuture_res.emplace_back(ptr_res);
 #else
         bthread_t tid;
         Bargs* args = new Bargs(last_ready_node, context);
         bthread_start_background(&tid, &BTHREAD_ATTR_SMALL, b_func, args);
-        g_test_bt_vec.push_back(tid);
-        context->mutable_bt_vec()->push_back(tid);
+        g_test_bt_vec.emplace_back(tid);
+        context->mutable_bt_vec()->emplace_back(tid);
 #endif
       }
       last_ready_node = output_node;

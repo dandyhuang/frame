@@ -8,7 +8,7 @@
 #include "glog/logging.h"
 #include "proto/faiss_search.pb.h"
 std::vector<bthread_t> g_test_bt_vec;
-std::vector<std::future<void*>> g_testfuture_res;
+std::vector<std::shared_ptr<std::future<void*>>> g_testfuture_res;
 
 DEFINE_string(gflags_config, "conf/gflags.conf", "gflags conf");
 int main(int argc, char const* argv[]) {
