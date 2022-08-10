@@ -134,7 +134,8 @@ class Graph {
 
     #ifdef DAG_THREAD_USE
         for (auto&& result : *context->mutable_future_res()) {
-          auto res = result.get();  // wait
+          // auto res = result.get();  // wait
+          result.get();
         }
     #else
         for (auto& b : context->bt_vec()) {
