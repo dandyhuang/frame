@@ -2,7 +2,7 @@
 
 #ifdef DAG_THREAD_USE
 #include "common/thread_pool.h"
-ThreadPool* g_pThreadPool = new (std::nothrow)ThreadPool(32);
+common::ThreadPool* g_pThreadPool = new (std::nothrow)common::ThreadPool(32);
 #else
 #include <brpc/channel.h>
 #endif

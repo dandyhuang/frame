@@ -1,6 +1,16 @@
 #include <brpc/channel.h>
 #include <google/protobuf/any.pb.h>
 
+#include <condition_variable>
+#include <functional>
+#include <future>
+#include <memory>
+#include <mutex>
+#include <queue>
+#include <stdexcept>
+#include <thread>
+#include <vector>
+
 #include "dag/graph_context.h"
 namespace frame {
 
