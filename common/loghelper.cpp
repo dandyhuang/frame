@@ -23,6 +23,7 @@ vlog::DayLogSink::DayLogSink(const string& strFileName, const string& strExt, in
 }
 
 DayLogSink::~DayLogSink() {
+  Terminate()
   if (_file) {
     fclose(_file);
   }
