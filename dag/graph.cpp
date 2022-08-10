@@ -71,10 +71,10 @@ void Node::run_output_nodes_if_ready(std::shared_ptr<frame::Context> context) {
         Bargs* args = new Bargs(last_ready_node, context);
         std::future<void*> res = std::move(g_pThreadPool->enqueue(b_func, args));
         // context->mutable_future_res()->emplace_back(res);
-        // // for (auto && result : results) {
-        // //     auto res = result.get();// wait
-        // // }
-        // g_testfuture_res.emplace_back(res);
+        // for (auto && result : results) {
+        //     auto res = result.get();// wait
+        // }
+        g_testfuture_res.emplace_back(std::move(res));
 #else
         bthread_t tid;
         Bargs* args = new Bargs(last_ready_node, context);

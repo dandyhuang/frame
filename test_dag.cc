@@ -37,7 +37,7 @@ int main(int argc, char const* argv[]) {
     auto graph = ::dag::common::GraphManager::Instance().get_graph(graph_name);
     if (graph) {
       graph->run<faiss::FaissRequest, faiss::FaissResponse>(
-          nullptr, &req, &rsp, done, context);
+          nullptr, &req, &rsp, done);
     } else {
       if (done != nullptr) done->Run();
     }
