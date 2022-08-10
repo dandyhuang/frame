@@ -5,7 +5,7 @@
 #include "scope_guard/scope_guard.h"
 
 int main() {
-  int code;
+  int code = 100;
   std::string ctx;
   std::string key;
   std::string dp_rsp;
