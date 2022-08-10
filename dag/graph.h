@@ -130,7 +130,7 @@ class Graph {
     }
     // 2. run
     root_node->run(context);
-    #ifdef Dag_Synchronize_Use
+    #ifdef DAG_SYNCHRONIZE_USE
 
     #ifdef DAG_THREAD_USE
         for (auto&& result : *context->mutable_future_res()) {

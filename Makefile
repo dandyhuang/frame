@@ -2,7 +2,7 @@
 
 
 CXX= g++
-CPPFLAGS= -g --std=c++11 -Wall -O2 -fPIC -DDag_Synchronize_Use -DDAG_THREAD_USE
+CPPFLAGS= -g --std=c++11 -Wall -O2 -fPIC -DDAG_SYNCHRONIZE_USE -DDAG_THREAD_USE
 CFLAGS := $(CPPFLAGS)
 BUILD = build
 BIN =

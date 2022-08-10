@@ -42,7 +42,7 @@ int main(int argc, char const* argv[]) {
       if (done != nullptr) done->Run();
     }
   }
-#ifdef Dag_Synchronize_Use
+#ifdef DAG_SYNCHRONIZE_USE
 
 #ifdef DAG_THREAD_USE
   for (auto&& result : g_testfuture_res) {
@@ -56,6 +56,6 @@ int main(int argc, char const* argv[]) {
 #endif
 
   std::cout << "cost:" << butil::gettimeofday_us() - start << std::endl;
-  sleep(5);
+  sleep(1);
   return 0;
 }
