@@ -9,6 +9,7 @@ class Context : public dag::GraphContext {
   Context(brpc::Controller* cntl, const google::protobuf::Message* input_request,
           google::protobuf::Message* input_response, google::protobuf::Closure* done) {}
   std::vector<bthread_t>* mutable_bt_vec() { return &bt_vec_; }
+  const std::vector<bthread_t>& bt_vec() { return bt_vec_; }
   std::vector<std::thread>* mutable_t_vec() { return &t_vec_; }
 
  private:

@@ -130,7 +130,7 @@ class Graph {
     // 2. run
     root_node->run(context);
 #ifdef Dag_Synchronize_Use
-    for (auto b : context->mutable_bt_vec()) {
+    for (auto& b : context->bt_vec()) {
       b.join();
     }
 #endif
