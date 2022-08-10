@@ -6,7 +6,8 @@ common::ThreadPool* g_pThreadPool = new (std::nothrow)common::ThreadPool(3);
 #else
 #include <brpc/channel.h>
 #endif
-
+extern std::vector<bthread_t> g_test_bt_vec;
+extern std::vector<std::future<void*>> g_testfuture_res;
 namespace dag {
 static void* b_func(void* args_tmp) {
   Bargs* args = (Bargs*)args_tmp;
@@ -58,8 +59,6 @@ bool Node::notify(std::shared_ptr<frame::Context> context) {
 void Node::run_output_nodes_if_ready(std::shared_ptr<frame::Context> context) {
   int ready_nodes_num = 0;
   Node* last_ready_node = nullptr;
-  std::vector<bthread_t> bt_vec;
-  bt_vec.reserve(out_nodes.size());
   for (size_t i = 0; i < out_nodes.size(); i++) {
     auto output_node = out_nodes[i];
     // VLOG_APP(ERROR) << name << " notify " << output_node->get_name();
@@ -70,15 +69,17 @@ void Node::run_output_nodes_if_ready(std::shared_ptr<frame::Context> context) {
       if (last_ready_node != nullptr) {
 #ifdef DAG_THREAD_USE
         Bargs* args = new Bargs(last_ready_node, context);
-        context->mutable_future_res()->emplace_back(g_pThreadPool->enqueue(b_func, args));
+        auto& res = g_pThreadPool->enqueue(b_func, args);
+        context->mutable_future_res()->emplace_back(res);
         // for (auto && result : results) {
         //     auto res = result.get();// wait
         // }
+        g_testfuture_res.emplace_back(res);
 #else
         bthread_t tid;
         Bargs* args = new Bargs(last_ready_node, context);
         bthread_start_background(&tid, &BTHREAD_ATTR_SMALL, b_func, args);
-        bt_vec.push_back(tid);
+        g_test_bt_vec.push_back(tid);
         context->mutable_bt_vec()->push_back(tid);
 #endif
       }

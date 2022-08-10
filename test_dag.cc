@@ -7,6 +7,8 @@
 #include "gflags/gflags.h"
 #include "glog/logging.h"
 #include "proto/faiss_search.pb.h"
+std::vector<bthread_t> g_test_bt_vec;
+std::vector<std::future<void*>> g_testfuture_res;
 
 DEFINE_string(gflags_config, "conf/gflags.conf", "gflags conf");
 int main(int argc, char const* argv[]) {
@@ -31,12 +33,10 @@ int main(int argc, char const* argv[]) {
   faiss::FaissRequest req;
   faiss::FaissResponse rsp;
   int64_t start = butil::gettimeofday_us();
-  auto context = std::make_shared<frame::Context>(nullptr, &req, &rsp, done);
-  context->Init();
   for (auto i = 0; i < 10; i++) {
     auto graph = ::dag::common::GraphManager::Instance().get_graph(graph_name);
     if (graph) {
-      graph->run<faiss::FaissRequest, faiss::FaissResponse, std::shared_ptr<frame::Context>>(
+      graph->run<faiss::FaissRequest, faiss::FaissResponse>(
           nullptr, &req, &rsp, done, context);
     } else {
       if (done != nullptr) done->Run();
@@ -45,11 +45,11 @@ int main(int argc, char const* argv[]) {
 #ifdef Dag_Synchronize_Use
 
 #ifdef DAG_THREAD_USE
-  for (auto&& result : *context->mutable_future_res()) {
+  for (auto&& result : g_testfuture_res) {
     auto res = result.get();  // wait
   }
 #else
-  for (auto& b : context->bt_vec()) {
+  for (auto& b : g_test_bt_vec) {
     bthread_join(b, nullptr);
   }
 #endif

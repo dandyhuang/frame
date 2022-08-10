@@ -105,15 +105,13 @@ class Graph {
     std::cout << "graph: " << name << " all_nodes size: " << all_nodes.size() << endl;
     return 0;
   }
-  template <typename Request, typename Response, typename Context>
+  template <typename Request, typename Response>
   int run(brpc::Controller* cntl, const Request* request, Response* response,
-          google::protobuf::Closure* done, Context context) {
+          google::protobuf::Closure* done) {
     // 1. 构造图的上下文
-    if (context == nullptr) {
-      auto context = std::make_shared<frame::Context>(cntl, request, response, done);
-      context->Init();
-    }
-    
+    auto context = std::make_shared<frame::Context>(cntl, request, response, done);
+    context->Init();
+
     if (root_node == nullptr) {
       VLOG_APP(ERROR) << "root_node is nullptr";
       return -1;
@@ -132,18 +130,18 @@ class Graph {
     }
     // 2. run
     root_node->run(context);
-// #ifdef Dag_Synchronize_Use
+    // #ifdef Dag_Synchronize_Use
 
-// #ifdef DAG_THREAD_USE
-//     for (auto&& result : *context->mutable_future_res()) {
-//       auto res = result.get();  // wait
-//     }
-// #else
-//     for (auto& b : context->bt_vec()) {
-//       bthread_join(b, nullptr);
-//     }
-// #endif
-// #endif
+    // #ifdef DAG_THREAD_USE
+    //     for (auto&& result : *context->mutable_future_res()) {
+    //       auto res = result.get();  // wait
+    //     }
+    // #else
+    //     for (auto& b : context->bt_vec()) {
+    //       bthread_join(b, nullptr);
+    //     }
+    // #endif
+    // #endif
     return 0;
   }
 };
