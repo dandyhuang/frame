@@ -24,19 +24,36 @@ int main(int argc, char const* argv[]) {
   dag::common::NodeManager::Instance().InitNodeConf(node_path);
   std::string graph_path = "./conf/graph.xml";
   dag::common::GraphManager::Instance().InitGraphConf(graph_path);
-  
+
   std::string graph_name = "default";
   google::protobuf::Closure* done;
   // brpc::ClosureGuard done_guard(done);
   faiss::FaissRequest req;
   faiss::FaissResponse rsp;
   int64_t start = butil::gettimeofday_us();
-  auto graph = ::dag::common::GraphManager::Instance().get_graph(graph_name);
-  if (graph) {
-    graph->run<faiss::FaissRequest, faiss::FaissResponse>(nullptr, &req, &rsp, done);
-  } else {
-    if (done != nullptr) done->Run();
+  auto context = std::make_shared<frame::Context>(nullptr, &req, &rsp, done);
+  context->Init();
+  for (auto i : = 0; i < 10; i++) {
+    auto graph = ::dag::common::GraphManager::Instance().get_graph(graph_name);
+    if (graph) {
+      graph->run<faiss::FaissRequest, faiss::FaissResponse, frame::Context>(nullptr, &req, &rsp,
+                                                                            done, context);
+    } else {
+      if (done != nullptr) done->Run();
+    }
   }
+#ifdef Dag_Synchronize_Use
+
+#ifdef DAG_THREAD_USE
+  for (auto&& result : *context->mutable_future_res()) {
+    auto res = result.get();  // wait
+  }
+#else
+  for (auto& b : context->bt_vec()) {
+    bthread_join(b, nullptr);
+  }
+#endif
+#endif
 
   std::cout << "cost:" << butil::gettimeofday_us() - start << std::endl;
   sleep(5);
