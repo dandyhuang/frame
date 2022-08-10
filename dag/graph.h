@@ -130,9 +130,16 @@ class Graph {
     // 2. run
     root_node->run(context);
 #ifdef Dag_Synchronize_Use
+
+#ifdef DAG_THREAD_USE
+    for (auto&& result : *context->mutable_future_res()) {
+      auto res = result.get();  // wait
+    }
+#else
     for (auto& b : context->bt_vec()) {
       bthread_join(b, nullptr);
     }
+#endif
 #endif
     return 0;
   }

@@ -69,8 +69,7 @@ void Node::run_output_nodes_if_ready(std::shared_ptr<frame::Context> context) {
       ++ready_nodes_num;
       if (last_ready_node != nullptr) {
 #ifdef DAG_THREAD_USE
-        std::vector<std::future<void*>> results;
-        results.push_back(g_pThreadPool->enqueue(b_func, args));
+        context->mutable_future_res()->push_back(g_pThreadPool->enqueue(b_func, args));
         // for (auto && result : results) {
         //     auto res = result.get();// wait
         // }
