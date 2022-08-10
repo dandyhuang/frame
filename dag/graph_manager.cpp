@@ -78,6 +78,7 @@ std::shared_ptr<dag::Graph> GraphManager::CreateGraph(const ::common::ConfigXml&
     auto service_node = service_fac->create();
     // 初始化每个node节点
     service_node->init(node_config);
+    VLOG_APP(INFO) << "node create:" << name;
     service_node->set_name(name);
     nodes_map[name] = service_node;
     return service_node;
