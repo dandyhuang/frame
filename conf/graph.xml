@@ -1,6 +1,6 @@
 <main name="graph">
     <graph name="default" pro="feed">
-        <node name="dag_000" children = "dag_001,dag_002" />
+        <node name="dag_000" children = "dag_001" />
         <node name="dag_001" children = "dag_end" />
         <node name="dag_002" children = "dag_end" />
         <!-- node name="dag_003" children = "dag_end" />

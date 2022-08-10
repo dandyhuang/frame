@@ -33,7 +33,7 @@ int main(int argc, char const* argv[]) {
   faiss::FaissRequest req;
   faiss::FaissResponse rsp;
   int64_t start = butil::gettimeofday_us();
-  for (auto i = 0; i < 10; i++) {
+  for (auto i = 0; i < 1; i++) {
     auto graph = ::dag::common::GraphManager::Instance().get_graph(graph_name);
     if (graph) {
       graph->run<faiss::FaissRequest, faiss::FaissResponse>(
