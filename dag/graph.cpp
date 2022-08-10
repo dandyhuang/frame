@@ -69,7 +69,7 @@ void Node::run_output_nodes_if_ready(std::shared_ptr<frame::Context> context) {
       if (last_ready_node != nullptr) {
 #ifdef DAG_THREAD_USE
         Bargs* args = new Bargs(last_ready_node, context);
-        auto res = std::move(g_pThreadPool->enqueue(b_func, args));
+        std::future<void*> res = std::move(g_pThreadPool->enqueue(b_func, args));
         context->mutable_future_res()->emplace_back(res);
         // for (auto && result : results) {
         //     auto res = result.get();// wait
