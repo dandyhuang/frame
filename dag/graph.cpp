@@ -16,7 +16,9 @@ static void* b_func(void* args_tmp) {
   delete args;
   return nullptr;
 }
-void Node::init(std::shared_ptr<::common::ConfigXml> config) {}
+void Node::init(std::shared_ptr<::common::ConfigXml> config) {
+  VLOG_APP(INFO) << "node create:" << name;
+}
 void Node::run(std::shared_ptr<frame::Context> context) {
   if (!skip(context)) {
     // VLOG_APP(ERROR) << "node:[" << name << "] do_service start; " << " type: " << type() << "
