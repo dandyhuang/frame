@@ -1,5 +1,0 @@
-#include "thirdparty/monitor_sdk_common/base/smart_ptr/scoped_ptr.h"
-#include "thirdparty/monitor_sdk_common/base/smart_ptr/weak_ptr.h"
-#include "thirdparty/monitor_sdk_common/base/smart_ptr/shared_ptr.h"
-#include "thirdparty/monitor_sdk_common/base/smart_ptr/enable_shared_from_this.h"
-#include "thirdparty/monitor_sdk_common/base/smart_ptr/owner_less.h"
