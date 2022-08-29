@@ -43,6 +43,7 @@ class TokenLimiter {
 
  private:
   limiter ReserveN(uint64_t now, int n);
+  float Advance(int64_t now);
   // synchronization
   std::mutex mutex_;
   Limit rate_;    // limit
