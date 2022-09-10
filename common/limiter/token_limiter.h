@@ -10,8 +10,8 @@
 #include <thread>
 #include <vector>
 
-#include "mixer_common/limiter/interface_limiter.h"
-#include "mixer_common/scope_guard/scope_guard.h"
+#include "common/limiter/interface_limiter.h"
+#include "common/scope_guard/scope_guard.h"
 
 namespace rec {
 namespace common {

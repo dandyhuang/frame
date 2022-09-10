@@ -7,7 +7,7 @@
 
 #include <atomic>
 
-#include "mixer_common/loghelper.h"
+#include "common/loghelper.h"
 
 namespace rec {
 namespace common {

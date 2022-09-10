@@ -1,8 +1,8 @@
 #pragma once
 
 #include "configs/scene_manager.h"
-#include "mixer_common/limiter/qps_limiter.h"
-#include "mixer_common/limiter/token_limiter.h"
+#include "common/limiter/qps_limiter.h"
+#include "common/limiter/token_limiter.h"
 
 namespace rec {
 namespace common {

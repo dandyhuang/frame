@@ -6,7 +6,7 @@
 #include <bvar/bvar.h>
 #include <omp.h>
 #include "protocol/mixer/mixer.pb.h"
-#include "mixer_common/loghelper.h"
+#include "common/loghelper.h"
 //#include "pb_to_json.h"
 
 DEFINE_string(protocol, "baidu_std", "Protocol type. Defined in protocol/brpc/options.proto");
@@ -66,7 +66,7 @@ int main(int argc, char ** argv) {
 
         ::rec::MixerRequest request;
         ::rec::MixerResponse response;
-    
+
         brpc::Controller cntl;
         cntl.set_log_id(log_id);
 
@@ -84,8 +84,8 @@ int main(int argc, char ** argv) {
         send_count << 1;
         if (!cntl.Failed()) {
             if (cntl.has_backup_request()) {
-                VLOG_APP(NOTICE) << "logid:" << log_id 
-                    << " response latency_ms: " << cost_ms 
+                VLOG_APP(NOTICE) << "logid:" << log_id
+                    << " response latency_ms: " << cost_ms
                     << ", set_backup_ms: " << real_backup_request_ms
                     << ", backup: " << cntl.has_backup_request();
             }
@@ -110,6 +110,6 @@ int main(int argc, char ** argv) {
         (long long)success_count.get_value(),
         (long long)backup_count.get_value(),
         (long long)failed_count.get_value());
-  
+
     return 0;
 }

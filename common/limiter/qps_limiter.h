@@ -7,10 +7,10 @@
 
 #include <atomic>
 
-#include "mixer_common/limiter/interface_limiter.h"
-#include "mixer_common/loghelper.h"
+#include "common/limiter/interface_limiter.h"
+#include "common/loghelper.h"
 
-#include "mixer_common/timer/timer.h"
+#include "common/timer/timer.h"
 
 namespace rec {
 namespace common {
