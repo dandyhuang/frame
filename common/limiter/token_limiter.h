@@ -10,8 +10,13 @@
 #include <thread>
 #include <vector>
 
+#include "mixer_common/limiter/interface_limiter.h"
+#include "mixer_common/scope_guard/scope_guard.h"
+
+namespace rec {
 namespace common {
 typedef float Limit;
+
 struct limiter {
   bool ok;
   int tokens;
@@ -20,10 +25,26 @@ struct limiter {
   Limit limit;
 };
 
-class TokenLimiter {
+class TokenLimiter : public InterfaceLimiter {
  public:
-  TokenLimiter(float rate, int capacity) : rate_(rate), capacity_(capacity), tokens_(0) {}
-  ~TokenLimiter();
+  TokenLimiter(int qps, int16_t precision) {
+    // us产生令牌的数据
+    if (precision == 0) {
+      rate_ = Limit(qps);
+      last_time_ = butil::gettimeofday_s();
+    } else if (precision == 1) {
+      rate_ = Limit(qps / 1000.0);
+      last_time_ = butil::gettimeofday_ms();
+    } else {
+      rate_ = Limit(qps / 1000000.0);
+      last_time_ = butil::gettimeofday_us();
+    }
+
+    capacity_ = qps;
+    tokens_ = qps;
+    precision_ = precision;
+  }
+  virtual ~TokenLimiter() = default;
   // Every converts a minimum time interval between events to a Limit.
   Limit Every(int64_t interval) {
     if (interval <= 0) {
@@ -32,14 +53,20 @@ class TokenLimiter {
     return 1 / Limit(interval / 1000.0);
   }
 
-  float TokensFromInterval(int32_t elapsed) {
+  float TokensFromInterval(int64_t elapsed) {
     if (rate_ <= 0) {
       return 0;
     }
-    return elapsed * 1000 * float(rate_);
+    return elapsed * float(rate_);
   }
 
-  bool Allow(int take = 1);
+  bool Allow(int take = 1) override;
+
+  float GetQps() override {
+    std::lock_guard<std::mutex> guard(mutex_);
+    return tokens_;
+  }
+  virtual void UpdateStatus() {}
 
  private:
   limiter ReserveN(uint64_t now, int n);
@@ -48,6 +75,7 @@ class TokenLimiter {
   std::mutex mutex_;
   Limit rate_;    // limit
   int capacity_;  // burst
+  int16_t precision_;
   float tokens_;
   // last is the last time the limiter's tokens field was updated
   uint64_t last_time_;
@@ -58,6 +86,5 @@ class TokenLimiter {
   bool stop;
 };
 
-class TokenLimiterManager {};
-
 }  // namespace common
+}  // namespace rec

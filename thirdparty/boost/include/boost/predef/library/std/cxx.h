@@ -31,7 +31,7 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 #if defined(_LIBCPP_VERSION)
 #   undef BOOST_LIB_STD_CXX
-#   define BOOST_LIB_STD_CXX BOOST_PREDEF_MAKE_10_VPPP(_LIBCPP_VERSION)
+#   define BOOST_LIB_STD_CXX BOOST_PREDEF_MAKE_10_commonP(_LIBCPP_VERSION)
 #endif
 
 #if BOOST_LIB_STD_CXX
