@@ -32,7 +32,7 @@ enum ConnectionType {
     CONNECTION_TYPE_UNKNOWN = 0;
     CONNECTION_TYPE_SINGLE = 1;
     CONNECTION_TYPE_POOLED = 2;
-    CONNECTION_TYPE_SHORT = 4;  
+    CONNECTION_TYPE_SHORT = 4;
 }
 
 enum ProtocolType {
@@ -64,7 +64,7 @@ enum ProtocolType {
     PROTOCOL_CDS_AGENT = 24;           // Client side only
     PROTOCOL_ESP = 25;                 // Client side only
     PROTOCOL_H2 = 26;
-    PROTOCAL_VIVO_RTRS_COMMON = 27;
+    PROTOCAL_DANDY_RTRS_COMMON = 27;
 }
 
 enum CompressType {

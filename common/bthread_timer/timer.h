@@ -1,6 +1,6 @@
 /***************************************************************************
  *
- * Copyright (c) 2021 Vivo.com, Inc. All Rights Reserved
+ * Copyright (c) 2021 Dandyhuang.com, Inc. All Rights Reserved
  * $Id$
  *
  **************************************************************************/

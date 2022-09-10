@@ -1,6 +1,6 @@
 /***************************************************************************
  *
- * Copyright (c) 2021 Vivo.com, Inc. All Rights Reserved
+ * Copyright (c) 2021 Dandyhuang.com, Inc. All Rights Reserved
  * $Id$
  *
  **************************************************************************/
@@ -58,11 +58,11 @@ bool KafkaDistribution::Run()
     } else {
         ret = m_writer.run();
     }
-    
+
     return ret == 0;
 }
 
-bool KafkaDistribution::ReadMessage(std::string& msg) 
+bool KafkaDistribution::ReadMessage(std::string& msg)
 {
     if (!m_is_reader) {
         return false;
@@ -70,13 +70,13 @@ bool KafkaDistribution::ReadMessage(std::string& msg)
 
     return m_reader.read_message(msg) == 0 ? true : false;
 }
-    
+
 bool KafkaDistribution::WriteMessage(const std::string& msg)
 {
     if (m_is_reader) {
         return false;
     }
-    
+
     return m_writer.write_message(msg) == 0 ? true : false;
 }
 bool KafkaDistribution::IsFull()
@@ -90,7 +90,7 @@ bool KafkaDistribution::Stop()
     } else {
         m_writer.close();
     }
-    
+
     return true;
 }
 
@@ -120,7 +120,7 @@ bool KafkaDistributionMgr::Initialize(const std::string& conf_path)
         return false;
     }
     close(fd);
-    
+
 
     std::map<std::string, KafkaDistributionConf> moduleConf;
     if (false == LoadConfigFile(moduleConf)) {
@@ -143,10 +143,10 @@ bool KafkaDistributionMgr::Initialize(const std::string& conf_path)
 
 bool KafkaDistributionMgr::LoadConfigFile(std::map<std::string, KafkaDistributionConf> &moduleConf)
 {
-    
+
     vv_feed::ConfigXml xml_conf;
     xml_conf.init(m_configFile);
-		
+
     vv_feed::ConfigXml node;
     std::string node_name = "module";
 
@@ -156,9 +156,9 @@ bool KafkaDistributionMgr::LoadConfigFile(std::map<std::string, KafkaDistributio
         LOG(FATAL) << "fetcher not found in file ";
         return false;
     }
-    
+
     do {
-        
+
         KafkaDistributionConf moduleInfo;
         node.Attr<std::string>("module_name", moduleInfo.module_name);
         node.Attr<int32_t>("heartbeat_interval", moduleInfo.heartbeat_interval);
@@ -169,10 +169,10 @@ bool KafkaDistributionMgr::LoadConfigFile(std::map<std::string, KafkaDistributio
         node.Attr<std::string>("msg_max_bytes", moduleInfo.msg_max_bytes);
         node.Attr<std::string>("sasl_mechanism", moduleInfo.mechanism);
         node.Attr<std::string>("sasl_username", moduleInfo.user_name);
-        node.Attr<std::string>("sasl_pwssword", moduleInfo.password);        
+        node.Attr<std::string>("sasl_pwssword", moduleInfo.password);
         node.Attr<uint32_t>("thread_num", moduleInfo.thread_num);
         node.Attr<int>("max_queue_size", moduleInfo.max_queue_size);
-        
+
         has_next = node.Next(node_name, node);
 
 

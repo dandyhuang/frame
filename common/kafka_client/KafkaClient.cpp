@@ -1,6 +1,6 @@
 /***************************************************************************
  *
- * Copyright (c) 2021 Vivo.com, Inc. All Rights Reserved
+ * Copyright (c) 2021 Dandyhuang.com, Inc. All Rights Reserved
  * $Id$
  *
  **************************************************************************/
@@ -17,7 +17,7 @@
 #include "concurrentqueue.h"
 #include "stdio.h"
 
- 
+
 bool KafkaWriter::bRunFlag = true;
 bool KafkaReader::bRunFlag = true;
 
@@ -46,7 +46,7 @@ void KafkaWriter::dr_msg_cb(rd_kafka_t *rk, const rd_kafka_message_t *rkmessage,
         /* rkmessage被librdkafka自动销毁*/
         //OpenFalconReport(0, NULL_AlgID, "rd_kafka_success", 1);
         ////DEBUG_LOG("dr_msg_cb:Message delivery ok!len=[%u],partition=[%d]", rkmessage->len, rkmessage->partition);
-    }    
+    }
 }
 
 
@@ -59,11 +59,11 @@ rd_kafka_t* KafkaWriter::createServer(const char *brokers, const char *group, co
 
     /* 创建一个kafka配置占位 */
 	conf = rd_kafka_conf_new();
- 
+
     /*创建broker集群*/
     memset(errstr, '\0', sizeof(errstr));
 	if (rd_kafka_conf_set(conf, "bootstrap.servers", brokers, errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK)
-    { 
+    {
         printf("createServer:rd_kafka_conf_set bootstrap.servers failed! error=[%s]", errstr);
         return NULL;
 	}
@@ -72,7 +72,7 @@ rd_kafka_t* KafkaWriter::createServer(const char *brokers, const char *group, co
     if (NULL != msg_max_bytes && strcmp(msg_max_bytes, "\0") != 0) {
         memset(errstr, '\0', sizeof(errstr));
 	    if (rd_kafka_conf_set(conf, "message.max.bytes", msg_max_bytes, errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK)
-        { 
+        {
             printf("createServer:rd_kafka_conf_set message.max.bytes failed! error=[%s]", errstr);
             return NULL;
 	}
@@ -100,7 +100,7 @@ rd_kafka_t* KafkaWriter::createServer(const char *brokers, const char *group, co
            printf("createServer:rd_kafka_conf_set failed, error=[%s]", errstr);
            return NULL;
        }
-       
+
        if(rd_kafka_conf_set(conf, "sasl.mechanism", mechanism, errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK){
            printf("createServer:rd_kafka_conf_set failed, error=[%s]", errstr);
            return NULL;
@@ -157,7 +157,7 @@ void KafkaWriter::close()
     KafkaWriter::setExitFlag(false);
     //INFO_LOG("KafkaWriter close begin.vecPrks.size=[%d],vecPrkts.size=[%d]", vecPrks.size(), vecPrkts.size());
     rd_kafka_resp_err_t err;
-   
+
     if (vecPrks.size() > 0)
     {
         auto iter=vecPrks.begin();
@@ -185,7 +185,7 @@ void KafkaWriter::close()
         auto iter=vecPrks.begin();
         for (;iter!=vecPrks.end(); iter++)
         {
-            rd_kafka_destroy(*iter); 
+            rd_kafka_destroy(*iter);
         }
         vecPrks.clear();
         //INFO_LOG("KafkaWriter close vecPrks OK!");
@@ -199,11 +199,11 @@ std::string KafkaWriter::toString()
     ostringstream oss;
 
     auto iter = this->kafka_params.begin();
-    oss << "KafkaWriter params(" << this->kafka_params.size() 
+    oss << "KafkaWriter params(" << this->kafka_params.size()
         << "):[" << endl;
     for (;iter != this->kafka_params.end(); iter++)
     {
-        oss << "{desc:[" << iter->desc 
+        oss << "{desc:[" << iter->desc
             << "],broker:[" << iter->broker
             << "],group:[" << iter->group
             << "],topic:[" << iter->topic
@@ -243,11 +243,11 @@ bool KafkaWriter::is_full(){
 int KafkaWriter::write_message(const std::string& kafka_msg)
 {
    //printf("_max_queue_size is %d queue size is %d \n", _max_queue_size, getQueueSize());
-   
+
    if(is_full()){
        return -1;
    }
-    
+
     if (!message_queue.enqueue(kafka_msg)) {
         printf("KafkaWriter Push message to queue error, msg=[%s]", kafka_msg.c_str());
         return -1;
@@ -279,14 +279,14 @@ void KafkaWriter::send_message_thread(KafkaWriter *pthis, rd_kafka_t* rk, rd_kaf
         sMessage = "";
         //usleep(200000);
         {
-           /* 
+           /*
             std::unique_lock<std::mutex> lock(pthis->queue_mutex);
             if (pthis->message_queue.size() > 0)
             {
                 bGetFlag = true;
                 kafka_message = pthis->message_queue.front();
                 pthis->message_queue.pop();
-                ////DEBUG_LOG("KafkaWriter After pop queue size=[%d].read message=[%s]", 
+                ////DEBUG_LOG("KafkaWriter After pop queue size=[%d].read message=[%s]",
                     pthis->message_queue.size(),kafka_message.c_str());
                 ////Attr_Set(PUSH_KAFKA_MSG_TO_QUEUE, 1);
             }
@@ -294,7 +294,7 @@ void KafkaWriter::send_message_thread(KafkaWriter *pthis, rd_kafka_t* rk, rd_kaf
            if (pthis->message_queue.try_dequeue(kafka_message)) {
                bGetFlag = true;
                pthis->_size.fetch_sub(1);
-               ////DEBUG_LOG("KafkaWriter After pop queue size=[%d].read message=[%s]", 
+               ////DEBUG_LOG("KafkaWriter After pop queue size=[%d].read message=[%s]",
                     //pthis->message_queue.size_approx(),kafka_message.c_str());
            }
         }
@@ -309,29 +309,29 @@ void KafkaWriter::send_message_thread(KafkaWriter *pthis, rd_kafka_t* rk, rd_kaf
         }
         else
         {
-            sMessage = kafka_message;            
+            sMessage = kafka_message;
         retry:
-        
+
 	     int key_idx = sMessage.find("message_key:") + 12;
 	     int end_key_idx = sMessage.find_first_of(",");
          std::string message_key = sMessage.substr(key_idx, end_key_idx - key_idx);
 	     int value_idx = sMessage.find("message_value:") + 14;
 	     std::string message_value =  sMessage.substr(value_idx);
-         
-     
+
+
              //DEBUG_LOG("Message Key:%s, Message Value size:%d", message_key.c_str(), message_value.length());
 	    /*Send/Produce message.
             这是一个异步调用，在成功的情况下，只会将消息排入内部producer队列，
             对broker的实际传递尝试由后台线程处理，之前注册的传递回调函数(dr_msg_cb)
             用于在消息传递成功或失败时向应用程序发回信号*/
-            if (rd_kafka_produce(rkt, RD_KAFKA_PARTITION_UA, RD_KAFKA_MSG_F_COPY, (void *)message_value.c_str(), message_value.length(), (void*)message_key.c_str(), message_key.length(), NULL) == -1)            
+            if (rd_kafka_produce(rkt, RD_KAFKA_PARTITION_UA, RD_KAFKA_MSG_F_COPY, (void *)message_value.c_str(), message_value.length(), (void*)message_key.c_str(), message_key.length(), NULL) == -1)
             {
-                /*fprintf(stderr, 
-                    "%% Failed to produce to topic %s: %s\n", 
+                /*fprintf(stderr,
+                    "%% Failed to produce to topic %s: %s\n",
                     rd_kafka_topic_name(rkt),
                     rd_kafka_err2str(rd_kafka_last_error()));*/
                 printf("Failed to produce to topic %s: %s\n", rd_kafka_topic_name(rkt), rd_kafka_err2str(rd_kafka_last_error()));
-    
+
                 if (rd_kafka_last_error() == RD_KAFKA_RESP_ERR__QUEUE_FULL)
                 {
                     /*如果内部队列满，等待消息传输完成并retry,
@@ -344,30 +344,30 @@ void KafkaWriter::send_message_thread(KafkaWriter *pthis, rd_kafka_t* rk, rd_kaf
                         iRetryCnt++;
                         //WARN_LOG("KafkaWriter Enqueued message failed due to queue full,retry at [%d] times.", iRetryCnt);
                         //goto retry;
-                         printf("KafkaWriter Enqueued message failed After retry [%d] times.topic=[%s],error=[%s]", 
+                         printf("KafkaWriter Enqueued message failed After retry [%d] times.topic=[%s],error=[%s]",
                             iRetryCnt, rd_kafka_topic_name(rkt), rd_kafka_err2str(rd_kafka_last_error()));
-                        
+
                     }
                     else
                     {
-                        printf("KafkaWriter Enqueued message failed After retry [%d] times.topic=[%s],error=[%s]", 
+                        printf("KafkaWriter Enqueued message failed After retry [%d] times.topic=[%s],error=[%s]",
                             iRetryCnt, rd_kafka_topic_name(rkt), rd_kafka_err2str(rd_kafka_last_error()));
                     }
-                    
+
                 }
                 else
                 {
-                    printf("KafkaWriter Enqueued message failed.topic=[%s],error=[%s]", 
+                    printf("KafkaWriter Enqueued message failed.topic=[%s],error=[%s]",
                         rd_kafka_topic_name(rkt), rd_kafka_err2str(rd_kafka_last_error()));
                 }
-                
+
             }
             else
             {
-                //DEBUG_LOG("KafkaWriter Enqueued message ok,topic=[%s],msg=[%s](len=[%d])", 
+                //DEBUG_LOG("KafkaWriter Enqueued message ok,topic=[%s],msg=[%s](len=[%d])",
                     //rd_kafka_topic_name(rkt), sMessage.c_str(), sMessage.length());
             }
-    
+
             /*producer应用程序应不断地通过以频繁的间隔调用rd_kafka_poll()来为
             传送报告队列提供服务。在没有生成消息以确定先前生成的消息已发送了其
             发送报告回调函数(和其他注册过的回调函数)期间，要确保rd_kafka_poll()
@@ -389,7 +389,7 @@ int KafkaWriter::init(const std::vector<kafka_params_t>& kafkas_params)
         }
         for (uint32_t j = 0; j < thread_num; ++j) {
             //INFO_LOG("init kafka client with broker=%s, group=%s, topic=%s, desc=%s, msg_max_bytes=%s, thread_pos=%d.",
-                //kafkas_params[i].broker.c_str(), kafkas_params[i].group.c_str(), kafkas_params[i].topic.c_str(), 
+                //kafkas_params[i].broker.c_str(), kafkas_params[i].group.c_str(), kafkas_params[i].topic.c_str(),
                 //kafkas_params[i].desc.c_str(),  kafkas_params[i].msg_max_bytes.c_str(), j);
 
             rd_kafka_t *rk = this->createServer(kafkas_params[i].broker.c_str(),kafkas_params[i].group.c_str(),
@@ -438,7 +438,7 @@ void KafkaReader::setType(string sType)
     this->sType = sType;
 }
 
-rd_kafka_t* KafkaReader::createServer(const char *brokers, const char *group, 
+rd_kafka_t* KafkaReader::createServer(const char *brokers, const char *group,
 const char* topic, const char *msg_max_bytes)
 {
     printf("createServer reader");
@@ -457,7 +457,7 @@ const char* topic, const char *msg_max_bytes)
     if (NULL != msg_max_bytes && strcmp(msg_max_bytes, "\0") != 0) {
         memset(errstr, '\0', sizeof(errstr));
 	    if (rd_kafka_conf_set(conf, "fetch.message.max.bytes", msg_max_bytes, errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK)
-        { 
+        {
             printf("createServer:rd_kafka_conf_set fetch.message.max.bytes failed! error=[%s] \n", errstr);
             return NULL;
 	    }
@@ -538,9 +538,9 @@ void KafkaReader::close()
             else
             {
                 //INFO_LOG("Consumer closed");
-            } 
+            }
             rd_kafka_destroy(*iter);
-        } 
+        }
         vecPrks.clear();
         //INFO_LOG("KafkaClient close vecPrks OK!");
     }
@@ -559,11 +559,11 @@ std::string KafkaReader::toString()
     ostringstream oss;
 
     auto iter = this->kafka_params.begin();
-    oss << "KafkaReader params(" << this->kafka_params.size() 
+    oss << "KafkaReader params(" << this->kafka_params.size()
         << "):[" << endl;
     for (;iter != this->kafka_params.end(); iter++)
     {
-        oss << "{desc:[" << iter->desc 
+        oss << "{desc:[" << iter->desc
             << "],broker:[" << iter->broker
             << "],group:[" << iter->group
             << "],topic:[" << iter->topic
@@ -591,7 +591,7 @@ int KafkaReader::init(const std::vector<kafka_params_t>&  kafkas_params)
     for (size_t i = 0; i < kafkas_params.size(); ++i)
     {
         //INFO_LOG("init KafkaReader client with broker=%s, group=%s, topic=%s, desc=%s, msg_max_bytes=%s, user_name=%s, password=%s.",
-            //kafkas_params[i].broker.c_str(), kafkas_params[i].group.c_str(), kafkas_params[i].topic.c_str(), 
+            //kafkas_params[i].broker.c_str(), kafkas_params[i].group.c_str(), kafkas_params[i].topic.c_str(),
             //kafkas_params[i].desc.c_str(), kafkas_params[i].msg_max_bytes.c_str(), kafka_params[i].user_name.c_str(),
             //kafka_params[i].password.c_str());
 
@@ -617,7 +617,7 @@ int KafkaReader::init(const std::vector<kafka_params_t>&  kafkas_params)
 
 int KafkaReader::read_message(std::string& sMsg)
 {
-    std::unique_lock<std::mutex> lock(queue_mutex); 
+    std::unique_lock<std::mutex> lock(queue_mutex);
     if (message_queue.empty())
     {
         sMsg = "";
@@ -647,7 +647,7 @@ void KafkaReader::read_message_thread(KafkaReader *pthis, rd_kafka_t* rk)
     while (bRunFlag)
     {
         sMsg = "";
-        rd_kafka_message_t *rkmessage = NULL; 
+        rd_kafka_message_t *rkmessage = NULL;
         if ((rkmessage = rd_kafka_consumer_poll(rk, pthis->timeout_ms)) == NULL)
         {
             sleep(1);

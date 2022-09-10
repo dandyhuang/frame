@@ -30,7 +30,7 @@ limiter TokenLimiter::ReserveN(uint64_t now, int n) {
   tokens -= float(n);
 
   // Decide result
-  auto ok = (n <= capacity_);
+  auto ok = (tokens  < 0 )? false : true;
 
   // Prepare reservation
   limiter r = {
@@ -54,6 +54,7 @@ limiter TokenLimiter::ReserveN(uint64_t now, int n) {
 
 float TokenLimiter::Advance(int64_t now) {
   auto last_time = last_time_;
+  // 因为锁住，lock导致传进来的时间小于last_time时间
   if ((now - last_time) < 0) {
     last_time = now;
   }

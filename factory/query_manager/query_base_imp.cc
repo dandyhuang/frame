@@ -1,4 +1,4 @@
-//  Copyright [2021.05] <vivo inc>
+//  Copyright [2021.05] <DANDY inc>
 #include <iostream>
 #include <memory>
 #include <set>

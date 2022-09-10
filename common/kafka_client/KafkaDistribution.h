@@ -1,6 +1,6 @@
 /***************************************************************************
  *
- * Copyright (c) 2021 Vivo.com, Inc. All Rights Reserved
+ * Copyright (c) 2021 Dandyhuang.com, Inc. All Rights Reserved
  * $Id$
  *
  **************************************************************************/
@@ -35,7 +35,7 @@ struct KafkaDistributionConf {
     std::string user_name;
     std::string password;
     uint32_t thread_num;
-    int max_queue_size;    
+    int max_queue_size;
 };
 
 class KafkaDistribution {

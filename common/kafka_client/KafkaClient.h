@@ -18,7 +18,7 @@
 //#include "xml_util.h"
 //#include "push_monitor.h"
 
-//#define _TEST_ atoi(VivoTinyxml::getValueFromXmlFile("test_flag").c_str())
+//#define _TEST_ atoi(DandyhuangTinyxml::getValueFromXmlFile("test_flag").c_str())
 
 using namespace std;
 
@@ -28,7 +28,7 @@ typedef struct kafka_params_s
     kafka_params_s()
     {
     }
-    kafka_params_s(const std::string &broker, const std::string &group, const std::string& topic, 
+    kafka_params_s(const std::string &broker, const std::string &group, const std::string& topic,
         const std::string &desc = "", const std::string &msg_max_bytes = "1000000", uint32_t thread_num = 10)
     {
         this->broker = broker;
@@ -83,7 +83,7 @@ private:
     std::vector<rd_kafka_t*> vecPrks;
     std::vector<rd_kafka_topic_t*> vecPrkts;
     std::atomic<int> _size{0};
-    
+
     moodycamel::ConcurrentQueue<std::string> message_queue;
     volatile uint64_t msg_num;
     int _max_queue_size;
@@ -96,7 +96,7 @@ public:
     KafkaReader();
     ~KafkaReader();
     void setType(string sType);
-    rd_kafka_t* createServer(const char *brokers, const char *group, 
+    rd_kafka_t* createServer(const char *brokers, const char *group,
         const char* topic, const char *msg_max_bytes="1000000");
     void close();
     std::string toString();

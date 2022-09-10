@@ -130,11 +130,11 @@ enum ProtocolType {
   PROTOCOL_CDS_AGENT = 24,
   PROTOCOL_ESP = 25,
   PROTOCOL_H2 = 26,
-  PROTOCAL_VIVO_RTRS_COMMON = 27
+  PROTOCAL_DANDY_RTRS_COMMON = 27
 };
 bool ProtocolType_IsValid(int value);
 const ProtocolType ProtocolType_MIN = PROTOCOL_UNKNOWN;
-const ProtocolType ProtocolType_MAX = PROTOCAL_VIVO_RTRS_COMMON;
+const ProtocolType ProtocolType_MAX = PROTOCAL_DANDY_RTRS_COMMON;
 const int ProtocolType_ARRAYSIZE = ProtocolType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ProtocolType_descriptor();
